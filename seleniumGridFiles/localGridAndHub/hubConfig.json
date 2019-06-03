@@ -1,0 +1,5 @@
+{
+  "browserTimeout": 120,
+  "timeout": 120,
+  "hostname": "127.0.0.1"
+}
