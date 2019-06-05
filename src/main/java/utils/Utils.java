@@ -17,7 +17,7 @@ public class Utils {
         getLogger().info("Wait for Javascript to load");
         ExpectedCondition<Boolean> jsLoad = driver1 -> ((JavascriptExecutor) driver1).executeScript("return document.readyState")
                 .toString().equals("complete");
-        getLogger().info("Page is loaded");
+        getLogger().info("Page " + driver.getCurrentUrl() + " is loaded");
         return wait.until(jsLoad);
     }
 

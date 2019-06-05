@@ -1,5 +1,6 @@
 package utils;
 
+import appLogic.LoginPageHelper;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
@@ -8,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.ITestContext;
 import ru.stqa.selenium.factory.WebDriverPool;
+import utils.listeners.TestListener;
 import webDriver.Capabilities;
 
 import java.net.MalformedURLException;
@@ -20,6 +22,8 @@ public class ApplicationManager {
     private EventFiringWebDriver firingWebDriver;
     private ITestContext iTestContext;
     private static final ThreadLocal<WebDriver> webDriver = new ThreadLocal<>();
+
+    private LoginPageHelper loginPageHelper;
 
     private Logger getLogger() {
         return LoggerFactory.getLogger(ApplicationManager.class);
@@ -34,6 +38,7 @@ public class ApplicationManager {
 
     public ApplicationManager(ITestContext iTestContext) {
         this.iTestContext = iTestContext;
+        loginPageHelper = new LoginPageHelper(this);
     }
 
     public WebDriver getDriver() {
@@ -52,6 +57,11 @@ public class ApplicationManager {
             driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
             firingWebDriver = new EventFiringWebDriver(webDriver.get());
         }
+        setUpTestContextAttributes(iTestContext);
+        return webDriver.get();
+    }
+
+    public static WebDriver getDriverStatic() {
         return webDriver.get();
     }
 
@@ -63,9 +73,17 @@ public class ApplicationManager {
         }
     }
 
+    private void setUpTestContextAttributes(ITestContext iTestContext) {
+        iTestContext.setAttribute("driver", webDriver.get());
+    }
+
     public void openApplicationUrl() {
         webDriver.get().get(appProperties.getApplicationUri());
         Utils.waitForJavascriptToLoad(webDriver.get());
+    }
+
+    public LoginPageHelper getLoginPageHelper() {
+        return loginPageHelper;
     }
 
 
