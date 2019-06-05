@@ -10,6 +10,6 @@ public class LoginTestData {
 
     /////////////////////////XPATHS/////////////////////////
    public static final String XPATH_LOGIN_PAGE_CONTAINER = "//*[@class = 'loginPageContainer']//form[contains(@id,'loginForm')]";
-   public static final String XPATH_GET_FIELD = ".//input[contains(@id,'{{ val }}') and not (@type='submit')]";
-   public static final String XPATH_GET_BUTTON = ".//input[contains(@id,'{{ val }}') and (@type='submit')]";
+    public static final String XPATH_LOGIN_BUTTON = ".//input[contains(@id,'{{ val }}') and (@type='submit')]";
+
 }

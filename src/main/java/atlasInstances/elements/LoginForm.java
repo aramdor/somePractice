@@ -7,17 +7,12 @@ import io.qameta.atlas.webdriver.extension.FindBy;
 import io.qameta.atlas.webdriver.extension.Param;
 import testData.LoginTestData;
 
-public interface LoginForm extends AtlasWebElement {
+public interface LoginForm extends AtlasWebElement, DefaultForm {
     String login = "login";
     String password = "password";
 
-    @Description("Field {{ val }}")
+    @Description("Button {{ val }}")
     @Retry(timeout = 5000)
-    @FindBy(LoginTestData.XPATH_GET_FIELD)
-    AtlasWebElement getField(@Param("val") String fieldName);
-
-    @Description("Field {{ val }}")
-    @Retry(timeout = 5000)
-    @FindBy(LoginTestData.XPATH_GET_BUTTON)
-    AtlasWebElement getButton(@Param("val") String fieldName);
+    @FindBy(LoginTestData.XPATH_LOGIN_BUTTON)
+    AtlasWebElement getLoginButton(@Param("val") String fieldName);
 }

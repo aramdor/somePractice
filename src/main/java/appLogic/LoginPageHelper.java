@@ -26,7 +26,7 @@ public class LoginPageHelper extends DriverBasedHelper {
 
     @Step("Find login button and click on it")
     public LoginPageHelper submit() {
-        pages.loginPage().getLoginPageContainer().getButton(LoginForm.login).click();
+        pages.loginPage().getLoginPageContainer().getLoginButton(LoginForm.login).click();
         return this;
     }
 }
