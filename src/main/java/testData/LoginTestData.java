@@ -1,6 +1,10 @@
 package testData;
 
-public class LoginPageTestData {
+import utils.ApplicationProperties;
+
+public class LoginTestData {
+    public static final String URL_LOGIN_PAGE = ApplicationProperties.applicationUri + "/login";
+
     public static final String LOGIN_NAME = "root";
     public static final String PASSWORD = "121382";
 

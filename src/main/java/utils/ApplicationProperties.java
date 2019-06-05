@@ -13,34 +13,22 @@ import java.util.Properties;
 @NonNull
 public class ApplicationProperties {
 
-    String browserName;
-    String hostname;
-    String deviceName;
-    String port;
-    String username;
-    String password;
-    String applicationUri;
-    String hub;
+    public static final String APP_PROPERTIES_PATH = System.getProperty("user.dir") + "\\target\\classes\\app.properties";
+    public static final String browserName = loadProperty("browserName");
+    public static final String hostname = loadProperty("hostName");
+    public static final String port = loadProperty("port");
+    public static final String hub = loadProperty("seleniumGridHub");
 
-    ApplicationProperties() {
-        String APP_PROPERTIES = System.getProperty("user.dir") + "\\target\\classes\\app.properties";
-        setBrowserName(loadProperty("browserName", APP_PROPERTIES));
-        setHostname(loadProperty("hostName", APP_PROPERTIES));
-        setPort(loadProperty("port", APP_PROPERTIES));
-        setUsername(loadProperty("username", APP_PROPERTIES));
-        setPassword(loadProperty("password", APP_PROPERTIES));
-        setHub(loadProperty("seleniumGridHub", APP_PROPERTIES));
-        setApplicationUri(generateApplicationUri());
-    }
+    public static final String applicationUri = generateApplicationUri();
 
-    private Logger getLogger() {
+    private static Logger getLogger() {
         return LoggerFactory.getLogger(ApplicationProperties.class);
     }
 
-    private String loadProperty(String name, String fileName) {
+    private static String loadProperty(String name) {
         Properties props = new Properties();
         try {
-            props.load(new FileInputStream(fileName));
+            props.load(new FileInputStream(APP_PROPERTIES_PATH));
         } catch (IOException e) {
             getLogger().error("\nIOException while loading property: " + name + "\n" + e.toString());
         }
@@ -55,8 +43,8 @@ public class ApplicationProperties {
         return value;
     }
 
-    private String generateApplicationUri() {
-        return "http://" + getHostname() + ":" + getPort();
+    private static String generateApplicationUri() {
+        return "http://" + hostname + ":" + port;
     }
 
 }

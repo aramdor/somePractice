@@ -5,7 +5,7 @@ import io.qameta.atlas.core.api.Retry;
 import io.qameta.atlas.webdriver.AtlasWebElement;
 import io.qameta.atlas.webdriver.extension.FindBy;
 import io.qameta.atlas.webdriver.extension.Param;
-import testData.LoginPageTestData;
+import testData.LoginTestData;
 
 public interface LoginForm extends AtlasWebElement {
     String login = "login";
@@ -13,11 +13,11 @@ public interface LoginForm extends AtlasWebElement {
 
     @Description("Field {{ val }}")
     @Retry(timeout = 5000)
-    @FindBy(LoginPageTestData.XPATH_GET_FIELD)
+    @FindBy(LoginTestData.XPATH_GET_FIELD)
     AtlasWebElement getField(@Param("val") String fieldName);
 
     @Description("Field {{ val }}")
     @Retry(timeout = 5000)
-    @FindBy(LoginPageTestData.XPATH_GET_BUTTON)
+    @FindBy(LoginTestData.XPATH_GET_BUTTON)
     AtlasWebElement getButton(@Param("val") String fieldName);
 }

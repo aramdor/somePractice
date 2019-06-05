@@ -12,22 +12,21 @@ public class LoginPageHelper extends DriverBasedHelper {
 
     @Step("Find a field and input username")
     public LoginPageHelper inputUsername(String username) {
-        pages.onLoginPage().getLoginPageContainer().getField(LoginForm.login).clear();
-        pages.onLoginPage().getLoginPageContainer().getField(LoginForm.login).sendKeys(username);
+        pages.loginPage().getLoginPageContainer().getField(LoginForm.login).clear();
+        pages.loginPage().getLoginPageContainer().getField(LoginForm.login).sendKeys(username);
         return this;
     }
 
     @Step("Find a field and input password")
     public LoginPageHelper inputPassword(String password) {
-        pages.onLoginPage().getLoginPageContainer().getField(LoginForm.password).clear();
-        pages.onLoginPage().getLoginPageContainer().getField(LoginForm.password).sendKeys(password);
+        pages.loginPage().getLoginPageContainer().getField(LoginForm.password).clear();
+        pages.loginPage().getLoginPageContainer().getField(LoginForm.password).sendKeys(password);
         return this;
     }
 
     @Step("Find login button and click on it")
     public LoginPageHelper submit() {
-        pages.onLoginPage().getLoginPageContainer().getButton(LoginForm.login).click();
-        waitUtilPageLoaded();
+        pages.loginPage().getLoginPageContainer().getButton(LoginForm.login).click();
         return this;
     }
 }

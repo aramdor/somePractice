@@ -15,10 +15,10 @@ public class Capabilities {
         return LoggerFactory.getLogger(Capabilities.class);
     }
 
-    public static DesiredCapabilities getCapabilities(final ApplicationProperties appProperties) {
+    public static DesiredCapabilities getCapabilities() {
         DesiredCapabilities capabilities;
         //set browser
-        switch (appProperties.getBrowserName()) {
+        switch (ApplicationProperties.browserName) {
             case FIREFOX: {
                 capabilities = getFirefoxCapabilities();
                 break;
@@ -29,14 +29,15 @@ public class Capabilities {
                 break;
             }
         }
-
-        if (capabilities != null) {
-            //set application name if it is specified
-            if (appProperties.getDeviceName() != null && !appProperties.getDeviceName().equals("")) {
-                capabilities.setCapability("applicationName", appProperties.getDeviceName());
-            }
-        } else {
-            getLogger().error("Error while configuring capabilities for browser " + appProperties.getBrowserName());
+//        //Is used only when you need to specify exact device
+//        if (capabilities != null) {
+//            //set application name if it is specified
+//            if (ApplicationProperties.deviceName != null && !ApplicationProperties.deviceName.equals("")) {
+//                capabilities.setCapability("applicationName", ApplicationProperties.deviceName);
+//            }
+//        } else {
+        if (capabilities == null) {
+            getLogger().error("Error while configuring capabilities for browser " + ApplicationProperties.browserName);
             System.exit(1);
         }
         return capabilities;

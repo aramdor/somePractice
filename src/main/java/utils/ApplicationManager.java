@@ -1,5 +1,7 @@
 package utils;
 
+import appLogic.DashboardPageHelper;
+import appLogic.DriverBasedHelper;
 import appLogic.LoginPageHelper;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -9,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.ITestContext;
 import ru.stqa.selenium.factory.WebDriverPool;
-import utils.listeners.TestListener;
 import webDriver.Capabilities;
 
 import java.net.MalformedURLException;
@@ -18,42 +19,49 @@ import java.util.concurrent.TimeUnit;
 
 public class ApplicationManager {
 
-    private ApplicationProperties appProperties = new ApplicationProperties();
     private EventFiringWebDriver firingWebDriver;
     private ITestContext iTestContext;
     private static final ThreadLocal<WebDriver> webDriver = new ThreadLocal<>();
 
+    ///////////////////////////////////vvvv Initialize page helpers here vvvv///////////////////////////////////
     private LoginPageHelper loginPageHelper;
+    private DashboardPageHelper dashboardPageHelper;
+
+    public LoginPageHelper onLoginPage() {
+        return loginPageHelper;
+    }
+    public DashboardPageHelper onDashboardPage() { return dashboardPageHelper; }
+
+    public ApplicationManager(ITestContext iTestContext) {
+        this.iTestContext = iTestContext;
+        loginPageHelper = new LoginPageHelper(this);
+        dashboardPageHelper = new DashboardPageHelper(this);
+    }
+
+
+    //AN=nd do not forget to initialize in Page Manager!! utils.PageManager
+    ///////////////////////////////////^^^^Initialize page helpers here^^^^///////////////////////////////////
+
+
 
     private Logger getLogger() {
         return LoggerFactory.getLogger(ApplicationManager.class);
     }
 
-
-    ////////////////////////////////////////
-    public void printAppProperties() {
-        System.out.println(appProperties.toString());
-    }
-    ////////////////////////////////////////
-
-    public ApplicationManager(ITestContext iTestContext) {
-        this.iTestContext = iTestContext;
-        loginPageHelper = new LoginPageHelper(this);
-    }
-
     public WebDriver getDriver() {
         if (webDriver.get() == null) {
-            DesiredCapabilities capabilities = Capabilities.getCapabilities(appProperties);
+            DesiredCapabilities capabilities = Capabilities.getCapabilities();
                 getLogger().info("Starting web driver");
             WebDriver driver = null;
             try {
-                driver = WebDriverPool.DEFAULT.getDriver(new URL(appProperties.hub), capabilities);
+                driver = WebDriverPool.DEFAULT.getDriver(new URL(ApplicationProperties.hub), capabilities);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
             webDriver.set(driver);
             Assert.assertNotNull(webDriver.get(), "Error whiled configuring driver");
             webDriver.get().manage().window().maximize();
+            assert driver != null;
             driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
             firingWebDriver = new EventFiringWebDriver(webDriver.get());
         }
@@ -77,14 +85,11 @@ public class ApplicationManager {
         iTestContext.setAttribute("driver", webDriver.get());
     }
 
-    public void openApplicationUrl() {
-        webDriver.get().get(appProperties.getApplicationUri());
-        Utils.waitForJavascriptToLoad(webDriver.get());
+    public void openUrlAndWait(String url) {
+        new DriverBasedHelper(this).openUrlAndWaitForJs(url);
     }
 
-    public LoginPageHelper getLoginPageHelper() {
-        return loginPageHelper;
-    }
+
 
 
 }
