@@ -11,7 +11,7 @@ import utils.Utils;
 public class DriverBasedHelper {
 
 
-    PageManager pages;
+    public PageManager pages;
     private WebDriver driver;
 
     public DriverBasedHelper(ApplicationManager manager) {

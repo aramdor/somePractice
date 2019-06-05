@@ -1,4 +1,4 @@
-package atlasInstances.pages.Administration;
+package atlasInstances.pages.administration;
 
 import atlasInstances.elements.DefaultForm;
 import io.qameta.allure.Description;
@@ -20,7 +20,7 @@ public interface CreateUserForm extends WebPage, DefaultForm {
     String Cancel = "createUserCancel";
 
 
-    @Description("Search for the Create new user button on the Administration -> Users screen")
+    @Description("Search for the Create new user button on the administration -> Users screen")
     @Retry(timeout = 5000)
     @FindBy(UsersAdministrationTestData.XPATH_CREATE_NEW_USER_BUTTON)
     AtlasWebElement getCreateNewUserButton();

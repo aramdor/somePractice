@@ -3,6 +3,7 @@ package utils;
 import appLogic.DashboardPageHelper;
 import appLogic.DriverBasedHelper;
 import appLogic.LoginPageHelper;
+import appLogic.administration.UsersPageHelper;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
@@ -26,16 +27,19 @@ public class ApplicationManager {
     ///////////////////////////////////vvvv Initialize page helpers here vvvv///////////////////////////////////
     private LoginPageHelper loginPageHelper;
     private DashboardPageHelper dashboardPageHelper;
+    private UsersPageHelper usersPageHelper;
 
     public LoginPageHelper onLoginPage() {
         return loginPageHelper;
     }
     public DashboardPageHelper onDashboardPage() { return dashboardPageHelper; }
+    public UsersPageHelper onUsersPage() { return usersPageHelper; }
 
     public ApplicationManager(ITestContext iTestContext) {
         this.iTestContext = iTestContext;
         loginPageHelper = new LoginPageHelper(this);
         dashboardPageHelper = new DashboardPageHelper(this);
+        usersPageHelper = new UsersPageHelper(this);
     }
 
 

@@ -1,6 +1,5 @@
-package atlasInstances.pages.Administration;
+package atlasInstances.pages.administration;
 
-import atlasInstances.elements.LoginForm;
 import io.qameta.allure.Description;
 import io.qameta.atlas.core.api.Retry;
 import io.qameta.atlas.webdriver.WebPage;
@@ -11,5 +10,5 @@ public interface AdministrationPage extends WebPage {
     @Description("Search for the User panel container")
     @Retry(timeout = 5000)
     @FindBy(UsersAdministrationTestData.XPATH_USER_PANEL_CONTAINER)
-    LoginForm getUserPanelContainer();
+    CreateUserForm getUserPanelContainer();
 }

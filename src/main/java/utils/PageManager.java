@@ -2,6 +2,7 @@ package utils;
 
 import atlasInstances.pages.DashboardPage;
 import atlasInstances.pages.LoginPage;
+import atlasInstances.pages.administration.AdministrationPage;
 import io.qameta.atlas.core.Atlas;
 import io.qameta.atlas.webdriver.WebDriverConfiguration;
 import io.qameta.atlas.webdriver.WebPage;
@@ -28,6 +29,7 @@ public class PageManager {
     public DashboardPage dashboardPage() {
         return onPage(DashboardPage.class);
     }
+    public AdministrationPage administrationPage() { return onPage(AdministrationPage.class); }
 
 
 }

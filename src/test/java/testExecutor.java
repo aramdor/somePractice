@@ -31,6 +31,16 @@ public class testExecutor {
                 .isDashboardPageLoaded()
                 .openAdminDropdown()
                 .clickOnFieldInAdminDropdown(DropDown.administrationUsers);
+        app.onUsersPage()
+                .isUsersPageLoaded()
+                .openCreateNewUserDialog()
+                .fillLoginField("login")
+                .fillPasswordField("password")
+                .fillConfirmPasswordField("password")
+                .clickOnTheForcePasswordChangeCheckbox()
+                .fillFullNameField("Vasiliy Testov")
+                .fillEmailField("iaroslav.stepanov@t-systems.com")
+                .fillJabberField("123");
         System.out.println("gg");
     }
 
