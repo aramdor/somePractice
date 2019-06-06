@@ -10,5 +10,6 @@ public interface AdministrationPage extends WebPage {
     @Description("Search for the User panel container")
     @Retry(timeout = 5000)
     @FindBy(UsersAdministrationTestData.XPATH_USER_PANEL_CONTAINER)
-    CreateUserForm getUserPanelContainer();
+    UserPanel getUserPanelContainer();
+
 }

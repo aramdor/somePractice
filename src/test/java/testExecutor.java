@@ -19,8 +19,8 @@ public class testExecutor {
 
     @Owner("Iaroslav Stepanov")
     @Test
-    @Description("Debug method to execute some code")
-    public void executor() {
+    @Description("Debug method to create new user")
+    public void createNewUser() {
 
         app.openUrlAndWait(LoginTestData.URL_LOGIN_PAGE);
         app.onLoginPage()
@@ -34,14 +34,36 @@ public class testExecutor {
         app.onUsersPage()
                 .isUsersPageLoaded()
                 .openCreateNewUserDialog()
-                .fillLoginField("login")
+                .fillLoginField("login2")
                 .fillPasswordField("password")
                 .fillConfirmPasswordField("password")
                 .clickOnTheForcePasswordChangeCheckbox()
                 .fillFullNameField("Vasiliy Testov")
                 .fillEmailField("iaroslav.stepanov@t-systems.com")
-                .fillJabberField("123");
-        System.out.println("gg");
+                .fillJabberField("123")
+                .clickOkButton();
+    }
+
+    @Owner("Iaroslav Stepanov")
+    @Test
+    @Description("Debug method to search for the existing user")
+    public void deleteUserWithTheSameName() {
+
+        app.openUrlAndWait(LoginTestData.URL_LOGIN_PAGE);
+        app.onLoginPage()
+                .inputUsername(LoginTestData.LOGIN_NAME)
+                .inputPassword(LoginTestData.PASSWORD)
+                .submit();
+        app.onDashboardPage()
+                .isDashboardPageLoaded()
+                .openAdminDropdown()
+                .clickOnFieldInAdminDropdown(DropDown.administrationUsers);
+        app.onUsersPage()
+                .isUsersPageLoaded()
+                .fillFindField("login")
+                .startSearch()
+                .deleteUserWithExactlyTheSameName("login2")
+        ;
     }
 
     @AfterMethod

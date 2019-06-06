@@ -21,5 +21,7 @@ public class Utils {
         return wait.until(jsLoad);
     }
 
-
+    public static void clickOkForAlertPopup(WebDriver driver) {
+        driver.switchTo().alert().accept();
+    }
 }

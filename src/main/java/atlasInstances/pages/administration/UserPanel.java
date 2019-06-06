@@ -7,14 +7,24 @@ import io.qameta.atlas.webdriver.WebPage;
 import io.qameta.atlas.webdriver.extension.FindBy;
 import testData.UsersAdministrationTestData;
 
-public interface UserPanel extends WebPage {
+public interface UserPanel extends WebPage, AtlasWebElement {
     @Description("Search for the Create new user button")
     @Retry(timeout = 5000)
     @FindBy(UsersAdministrationTestData.XPATH_CREATE_NEW_USER_BUTTON)
-    AtlasWebElement getCreateNewUserButton();
+    AtlasWebElement getCreateUserButton();
 
     @Description("Search for the administration -> Users -> Create new user dialog")
     @Retry(timeout = 5000)
     @FindBy(UsersAdministrationTestData.XPATH_CREATE_NEW_USER_DIALOG)
     CreateUserForm getCreateNewUserDialog();
+
+    @Description("Get Find user panel container")
+    @Retry(timeout = 5000)
+    @FindBy(UsersAdministrationTestData.XPATH_FIND_USER_CONTAINER)
+    FindUserPanel getFindUserPanelContainer();
+
+    @Description("Search for the Create new user button")
+    @Retry(timeout = 5000)
+    @FindBy(UsersAdministrationTestData.XPATH_USER_LIST)
+    UsersListTable getUsersListPanel();
 }

@@ -30,6 +30,4 @@ public class PageManager {
         return onPage(DashboardPage.class);
     }
     public AdministrationPage administrationPage() { return onPage(AdministrationPage.class); }
-
-
 }
