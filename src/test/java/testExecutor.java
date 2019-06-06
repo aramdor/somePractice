@@ -41,7 +41,8 @@ public class testExecutor {
                 .fillFullNameField("Vasiliy Testov")
                 .fillEmailField("iaroslav.stepanov@t-systems.com")
                 .fillJabberField("123")
-                .clickOkButton();
+                .clickOkButton()
+                .editUserPageWasOpened();
     }
 
     @Owner("Iaroslav Stepanov")

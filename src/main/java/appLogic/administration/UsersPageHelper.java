@@ -6,6 +6,7 @@ import atlasInstances.pages.administration.FindUserPanel;
 import atlasInstances.pages.administration.UsersListRow;
 import io.qameta.allure.Step;
 import org.testng.Assert;
+import testData.EditUserTestData;
 import testData.UsersAdministrationTestData;
 import utils.ApplicationManager;
 import utils.Utils;
@@ -85,6 +86,11 @@ public class UsersPageHelper extends DriverBasedHelper {
     public UsersPageHelper clickOkButton() {
         pages.administrationPage().getUserPanelContainer().getCreateNewUserDialog().getButton(CreateUserForm.Ok).click();
         return this;
+    }
+
+    @Step("Check that edit new user page was opened successfully after the new user was created")
+    public void editUserPageWasOpened() {
+        urlContains(EditUserTestData.URL_EDIT_USER_PAGE_BASE_PART);
     }
 
     ///////////////////////////////////////Find existing user///////////////////////////////////////
