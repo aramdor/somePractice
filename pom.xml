@@ -161,10 +161,20 @@
 
     <profiles>
         <profile>
-            <id>URI: localhost</id>
+            <id>Url: localhost</id>
             <properties>
                 <HOST>localhost</HOST>
                 <PORT>8080</PORT>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>User: root</id>
+            <properties>
+                <USERNAME>root</USERNAME>
+                <PASSWORD>121382</PASSWORD>
             </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>

@@ -46,7 +46,7 @@ public class testExecutor {
 
     @Owner("Iaroslav Stepanov")
     @Test
-    @Description("Debug method to search for the existing user")
+    @Description("Debug method to search for the existing user and delete it if required")
     public void deleteUserWithTheSameName() {
 
         app.openUrlAndWait(LoginTestData.URL_LOGIN_PAGE);
@@ -62,7 +62,7 @@ public class testExecutor {
                 .isUsersPageLoaded()
                 .fillFindField("login")
                 .startSearch()
-                .deleteUserWithExactlyTheSameName("login2")
+                .deleteUserWithExactlyTheSameName("login")
         ;
     }
 

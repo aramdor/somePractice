@@ -18,6 +18,8 @@ public class ApplicationProperties {
     public static final String hostname = loadProperty("hostName");
     public static final String port = loadProperty("port");
     public static final String hub = loadProperty("seleniumGridHub");
+    public static final String username = loadProperty("username");
+    public static final String password = loadProperty("password");
 
     public static final String applicationUri = generateApplicationUri();
 
