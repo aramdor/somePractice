@@ -5,12 +5,11 @@ import atlasInstances.pages.administration.CreateUserForm;
 import atlasInstances.pages.administration.FindUserPanel;
 import atlasInstances.pages.administration.UsersListRow;
 import io.qameta.allure.Step;
-import io.qameta.atlas.webdriver.AtlasWebElement;
+import org.testng.Assert;
 import testData.UsersAdministrationTestData;
 import utils.ApplicationManager;
 import utils.Utils;
 
-import java.util.List;
 import java.util.Optional;
 
 public class UsersPageHelper extends DriverBasedHelper {
@@ -103,8 +102,17 @@ public class UsersPageHelper extends DriverBasedHelper {
 
     ///////////////////////////////////////Users list///////////////////////////////////////
     @Step("Get users list in the Administration -> Users")
-    public UsersPageHelper deleteUserWithExactlyTheSameName (String fullMatch) {
-        Optional<UsersListRow> rowWithExactSameUser = pages.administrationPage().getUserPanelContainer().getUsersListPanel()
+    public UsersPageHelper deleteUserWithExactlyTheSameName(String fullMatch) {
+        try {
+            pages
+                    .administrationPage()
+                    .getUserPanelContainer()
+                    .getUsersListTable()
+                    .getUsersTableRows().get(0).isDisplayed();
+        } catch (IndexOutOfBoundsException ex) {
+            Assert.fail("User with name " + fullMatch + " was not found!");
+        }
+        Optional<UsersListRow> rowWithExactSameUser = pages.administrationPage().getUserPanelContainer().getUsersListTable()
                 .getUsersTableRows().stream().filter(row -> row.getColumnFromTheRow(UsersListRow.login).getText().contentEquals(fullMatch)).findFirst();
         if (rowWithExactSameUser.isPresent()) {
             rowWithExactSameUser.get().getColumnFromTheRow(UsersListRow.deleteButton).click();

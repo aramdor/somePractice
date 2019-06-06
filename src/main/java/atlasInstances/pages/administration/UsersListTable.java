@@ -13,4 +13,9 @@ public interface UsersListTable extends AtlasWebElement {
     @Retry(timeout = 5000)
     @FindBy(UsersAdministrationTestData.XPATH_TABLE_ROWS)
     List<UsersListRow> getUsersTableRows();
+
+    @Description("Get \"No users found\" notification")
+    @Retry(timeout = 5000)
+    @FindBy(UsersAdministrationTestData.XPATH_NO_USERS_FOUND_NOTIFICATION)
+    AtlasWebElement getNoUsersFoundNotification();
 }

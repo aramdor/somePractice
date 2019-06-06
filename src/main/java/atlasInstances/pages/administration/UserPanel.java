@@ -26,5 +26,5 @@ public interface UserPanel extends WebPage, AtlasWebElement {
     @Description("Search for the Create new user button")
     @Retry(timeout = 5000)
     @FindBy(UsersAdministrationTestData.XPATH_USER_LIST)
-    UsersListTable getUsersListPanel();
+    UsersListTable getUsersListTable();
 }
