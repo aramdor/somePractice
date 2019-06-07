@@ -15,6 +15,5 @@ public class UsersAdministrationTestData {
     public static final String XPATH_CREATE_NEW_USER_DIALOG = ".//*[contains (@id ,'createUserDialog')]";
     //////////////////////Users list//////////////////////
     public static final String XPATH_COLUMN_FROM_THE_ROW = ".//*[contains (@id ,'{{ val }}')]";
-    public static final String XPATH_TABLE_ROWS = ".//tbody//tr";
     public static final String XPATH_NO_USERS_FOUND_NOTIFICATION = ".//p[@class = 'note']";
 }

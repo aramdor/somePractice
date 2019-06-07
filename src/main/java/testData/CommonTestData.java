@@ -11,5 +11,11 @@ public class CommonTestData {
     public static final String XPATH_DEFAULT_FIELD_LABEL = ".//label[contains(@id,'{{ val }}')]";
     public static final String XPATH_DEFAULT_BUTTON = ".//button[contains(@id,'{{ val }}')]";
 
+    ////////////////////Default form xpaths - tables and popups////////////////////
+    public static final String XPATH_TABLE_ROWS = ".//tbody//tr";
+    public static final String XPATH_POPUP = "//*[contains(@id,'popup')]";
+    public static final String XPATH_ERROR_DESCRIPTION = ".//td[not(@class)]";
+
+
 
 }

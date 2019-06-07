@@ -7,6 +7,7 @@ import atlasInstances.pages.administration.UsersListRow;
 import io.qameta.allure.Step;
 import org.testng.Assert;
 import testData.EditUserTestData;
+import testData.UserObject;
 import testData.UsersAdministrationTestData;
 import utils.ApplicationManager;
 import utils.Utils;
@@ -89,8 +90,15 @@ public class UsersPageHelper extends DriverBasedHelper {
     }
 
     @Step("Check that edit new user page was opened successfully after the new user was created")
-    public void editUserPageWasOpened() {
+    public void wasEditUserPageOpened() {
         urlContains(EditUserTestData.URL_EDIT_USER_PAGE_BASE_PART);
+    }
+
+    @Step("Check \"Value should be unique\' popup")
+    public void checkPopupError() {
+        System.out.println(
+        pages.administrationPage().getPopupContainer().getFirstPopup().getErrorDescriptionField().getText()
+        );
     }
 
     ///////////////////////////////////////Find existing user///////////////////////////////////////
@@ -109,22 +117,76 @@ public class UsersPageHelper extends DriverBasedHelper {
     ///////////////////////////////////////Users list///////////////////////////////////////
     @Step("Get users list in the Administration -> Users")
     public UsersPageHelper deleteUserWithExactlyTheSameName(String fullMatch) {
+        isUsersListTableEmpty();
+        Optional<UsersListRow> usersListRow = getRowByExactlyTheSameLogin(fullMatch);
+        if (usersListRow.isPresent()) {
+            usersListRow.get().getColumnFromTheRow(UsersListRow.deleteButton).click();
+            Utils.clickOkForAlertPopup(ApplicationManager.getDriverStatic());
+        }
+        return this;
+    }
+
+    @Step("Check that user with the same login present in the users list table in the (Administration -> Users page)")
+    public UsersPageHelper doesUserAlreadyExistsWithAssert(String fullMatch) {
+        if (!doesUserAlreadyExists(fullMatch)) {
+            Assert.fail("User with login: " + fullMatch + " does not exists");
+        }
+        return this;
+    }
+
+    @Step("Check that user with the same login present in the users list table in the (Administration -> Users page)")
+    public Boolean doesUserAlreadyExists(String fullMatch) {
+        isUsersListTableEmpty();
+        Optional<UsersListRow> usersListRow = getRowByExactlyTheSameLogin(fullMatch);
+        return usersListRow.isPresent();
+    }
+
+    @Step("Check that user search returns some values")
+    private UsersPageHelper isUsersListTableEmpty() {
         try {
             pages
                     .administrationPage()
                     .getUserPanelContainer()
                     .getUsersListTable()
-                    .getUsersTableRows().get(0).isDisplayed();
+                    .getTableRows().get(0).isDisplayed();
         } catch (IndexOutOfBoundsException ex) {
-            Assert.fail("User with name " + fullMatch + " was not found!");
-        }
-        Optional<UsersListRow> rowWithExactSameUser = pages.administrationPage().getUserPanelContainer().getUsersListTable()
-                .getUsersTableRows().stream().filter(row -> row.getColumnFromTheRow(UsersListRow.login).getText().contentEquals(fullMatch)).findFirst();
-        if (rowWithExactSameUser.isPresent()) {
-            rowWithExactSameUser.get().getColumnFromTheRow(UsersListRow.deleteButton).click();
-            Utils.clickOkForAlertPopup(ApplicationManager.getDriverStatic());
+            Assert.fail("Users list table is empty!");
         }
         return this;
+    }
+
+    @Step("Find user with exacly the same login, name or email")
+    private Optional<UsersListRow> getRowByExactlyTheSameLogin(String fullMatch) {
+        return pages.administrationPage().getUserPanelContainer().getUsersListTable()
+                .getTableRows().stream().filter(row -> row.getColumnFromTheRow(UsersListRow.login).getText().contentEquals(fullMatch)).findFirst();
+    }
+
+    ////////////////////////////////Shortcuts////////////////////////////////
+    @Step("Create new user if it does not exist (Administration -> Users page)")
+    public UsersPageHelper createUserIfItDoesNotExists(ApplicationManager app, UserObject user) {
+        if (!doesUserAlreadyExists(user.getLogin())) {
+            app.onUsersPage()
+                    .isUsersPageLoaded()
+                    .openCreateNewUserDialog()
+                    .fillLoginField(user.getLogin())
+                    .fillPasswordField(user.getPassword())
+                    .fillConfirmPasswordField(user.getPasswordConfirmation())
+                    .clickOnTheForcePasswordChangeCheckbox()
+                    .fillFullNameField(user.getFullName())
+                    .fillEmailField(user.getEmail())
+                    .fillJabberField(user.getJabber())
+                    .clickOkButton();
+            app.onEditUserPage()
+                    .wasEditUserPageLoaded()
+                    .clickOnUsersLinkInLeftSidebar();
+            app.onUsersPage()
+                    .isUsersPageLoaded();
+            doesUserAlreadyExistsWithAssert(user.getLogin());
+            return this;
+        }
+        else {
+            return this;
+        }
     }
 
 }
