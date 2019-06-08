@@ -101,17 +101,48 @@ public class testExecutor {
 
     @DataProvider(name = "validUsers")
     public Object[][] userFormData() {
-        return new Object[][] {
-                new Object[] {new UserObject().setLogin("login1").setPassword("password").setPasswordConfirmation("password")},
-                new Object[] {new UserObject().setLogin("login12").setPassword("password").setPasswordConfirmation("password")},
-                new Object[] {new UserObject().setLogin("login132").setPassword("password").setPasswordConfirmation("password")},
+        return new Object[][]{
+                new Object[]{new UserObject()
+                        .setLogin("login")
+                        .setPassword("password")
+                        .setPasswordConfirmation("password")}, //regular user with mandatory fields only
+                new Object[]{new UserObject()
+                        .setLogin("!\"#$%&'()*+,-.0123456789:;=?@ABCDEFGHIJKLMNOPQR")
+                        .setPassword("!\"#$%&'()*+,-.0123456789:;=?@ABCDEFGHIJKLMNOPQR<>/")
+                        .setPasswordConfirmation("!\"#$%&'()*+,-.0123456789:;=?@ABCDEFGHIJKLMNOPQR<>/")
+                        .setForcePasswordChangeCheckbox(true)
+                        .setFullName("!\"#$%&'()*+,-.0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
+                        .setJabber("!\"#$%&'()*+,-.0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
+                        .setEmail("!\"#$%&'()*+,-.0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~")}, //all basic Latin symbols part 1 for all fields
+                new Object[]{new UserObject()
+                        .setLogin("STUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
+                        .setPassword("STUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
+                        .setPasswordConfirmation("STUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
+                        .setForcePasswordChangeCheckbox(false)
+                        .setFullName("VWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~")}, //all basic Latin symbols part 2
+//                new Object[]{new UserObject()
+//                        .setLogin("豈更車賈滑串句龜龜契金喇奈懶癩羅蘿螺裸邏樂洛烙珞落酪駱亂卵欄爛蘭鸞嵐濫藍襤拉臘蠟廊朗")  //magic redirect!!
+//                        .setPassword("password")
+//                        .setPasswordConfirmation("password")}, //CJK Compatibility Ideographs
+//                new Object[]{new UserObject()
+//                        .setLogin("a")
+//                        .setPassword("a")
+//                        .setPasswordConfirmation("a")}, //1 symbol account
+//                new Object[] {new UserObject().setLogin("132").setPassword("password").setPasswordConfirmation("password")},
+//                new Object[] {new UserObject().setLogin("1324").setPassword("password").setPasswordConfirmation("password")},
+//                new Object[] {new UserObject().setLogin("1326").setPassword("password").setPasswordConfirmation("password")},
+//                new Object[] {new UserObject().setLogin("1327").setPassword("password").setPasswordConfirmation("password")},
+//                new Object[] {new UserObject().setLogin("1328").setPassword("password").setPasswordConfirmation("password")},
+//                new Object[] {new UserObject().setLogin("1329").setPassword("password").setPasswordConfirmation("password")},
+//                new Object[] {new UserObject().setLogin("132911").setPassword("password").setPasswordConfirmation("password")},
+//                new Object[] {new UserObject().setLogin("</>").setPassword("password").setPasswordConfirmation("password")}, //negative
         };
     }
 
     @Owner("Iaroslav Stepanov")
     @Test(dataProvider = "validUsers")
     @Description("Positive test: Create users with all fields combinations")
-    public void createNewUserWithMandatoryFields(UserObject currentUser) {
+    public void createNewUserPositive(UserObject currentUser) {
         app.onUsersPage()
                 .isUsersPageLoaded()
                 .deleteUserWithExactlyTheSameLogin(currentUser.getLogin())

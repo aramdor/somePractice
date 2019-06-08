@@ -7,14 +7,13 @@ import atlasInstances.pages.administration.UsersListRow;
 import io.qameta.allure.Step;
 import org.testng.Assert;
 import testData.EditUserTestData;
+import testData.LoginTestData;
 import testData.UserObject;
 import testData.UsersAdministrationTestData;
 import utils.ApplicationManager;
 import utils.Utils;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class UsersPageHelper extends DriverBasedHelper {
 
@@ -34,16 +33,28 @@ public class UsersPageHelper extends DriverBasedHelper {
     @Step("Make sure that we are able to create new user. If no let's delete all users")
     public UsersPageHelper deleteAllUsersIfUserLimitIsExceeded() {
         if (pages.administrationPage().getUserPanelContainer().getUsersListTable().getAmountOfUsers().getText().trim().contentEquals("(11 total)")) {
-            pages.administrationPage().getUserPanelContainer().getUsersListTable().getAllElementsFromTheUsersTable(UsersListRow.deleteButton)
-                    .forEach(user -> {
-                        pages.administrationPage().getUserPanelContainer().getUsersListTable().getAllElementsFromTheUsersTable(UsersListRow.deleteButton).get(0).click();
-                        Utils.clickOkForAlertPopup(ApplicationManager.getDriverStatic());
-                        if (!isMessagePopupDisplayed()) //TODO: does not work!! reimplement
-                        {
-                            pages.administrationPage().getUserPanelContainer().getUsersListTable().getAllElementsFromTheUsersTable(UsersListRow.deleteButton).get(1).click();
-                            Utils.clickOkForAlertPopup(ApplicationManager.getDriverStatic());
-                        }
-                    });
+            int k = pages.administrationPage().getUserPanelContainer().getUsersListTable().getAllElementsFromTheUsersTable(UsersListRow.deleteButton).size() - 1; //-1 is added because we are not able to delete guest user but it has delete button
+            for (int i=0; i < k; i++) {
+                Optional<UsersListRow> userToDelete = pages.administrationPage().getUserPanelContainer().getUsersListTable().getTableRows().stream().filter(user -> {
+                    String currentName = user.getColumnFromTheRow(UsersListRow.login).getText();
+                    return !currentName.contentEquals("guest") &&
+                            !currentName.contentEquals(LoginTestData.LOGIN_NAME) &&
+                            !currentName.contentEquals("root");
+                }).findFirst();
+                if (userToDelete.isPresent()) {
+                userToDelete.get().getColumnFromTheRow(UsersListRow.deleteButton).click();
+                    Utils.clickOkForAlertPopup(ApplicationManager.getDriverStatic());
+                };
+//                    .forEach(user -> {
+//                        pages.administrationPage().getUserPanelContainer().getUsersListTable().getAllElementsFromTheUsersTable(UsersListRow.deleteButton).get(0).click();
+//                        Utils.clickOkForAlertPopup(ApplicationManager.getDriverStatic());
+//                        if (!isMessagePopupDisplayed()) //TODO: does not work!! reimplement
+//                        {
+//                            pages.administrationPage().getUserPanelContainer().getUsersListTable().getAllElementsFromTheUsersTable(UsersListRow.deleteButton).get(1).click();
+//                            Utils.clickOkForAlertPopup(ApplicationManager.getDriverStatic());
+//                        }
+//                    });
+            }
             Assert.assertTrue(pages.administrationPage().getUserPanelContainer().getCreateUserButton().isDisplayed(), "Create new user button is still not displayed!!");
         }
         return this;
@@ -185,6 +196,12 @@ public class UsersPageHelper extends DriverBasedHelper {
     private Optional<UsersListRow> getRowByExactlyTheSameLogin(String fullMatch) {
         return pages.administrationPage().getUserPanelContainer().getUsersListTable()
                 .getTableRows().stream().filter(row -> row.getColumnFromTheRow(UsersListRow.login).getText().contentEquals(fullMatch)).findFirst();
+    }
+
+    @Step("Fill the username in the Administration -> Users -> Create new user dialog")
+    public UsersPageHelper checkExistingUserFieldsAccordingToTestData (UserObject userData) {
+        Optional<UsersListRow> user = getRowByExactlyTheSameLogin(userData.getLogin()); //TODO add checks for all fields
+        return this;
     }
 
     ////////////////////////////////Shortcuts////////////////////////////////

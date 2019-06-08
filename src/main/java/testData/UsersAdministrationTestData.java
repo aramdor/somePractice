@@ -8,6 +8,7 @@ public class UsersAdministrationTestData {
 
     /////////////////////////XPATHS/////////////////////////
     public static final String XPATH_USER_PANEL_CONTAINER = "//*[contains (@id, 'userPanel')]";
+    public static final String XPATH_EDIT_PANEL_CONTAINER = "//*[contains (@id, 'editUserPanel')]";
     public static final String XPATH_FIND_USER_CONTAINER = "//div[@class = 'jt-panel jt-fieldset']";
     public static final String XPATH_USER_LIST = ".//*[contains (@id, 'usersList')]";
     //////////////////////Create new user//////////////////////
