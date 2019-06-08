@@ -12,7 +12,7 @@ import utils.ApplicationManager;
 
 public class testExecutor {
     private ApplicationManager app;
-    private UserObject baseUser = new UserObject("login", "password", "password", true, "Vasiliy Testov", "iaroslav.stepanov@t-systems.com", "123");
+    private UserObject baseUser = new UserObject("login", "password", "password", true, "Vasiliy Testov", "iaroslav.stepanov@t-systems.com", "123", "—");
 
     ///////////////////////////////Before and after actions///////////////////////////////
 
@@ -104,38 +104,57 @@ public class testExecutor {
         return new Object[][]{
                 new Object[]{new UserObject()
                         .setLogin("login")
-                        .setPassword("password")
-                        .setPasswordConfirmation("password")}, //regular user with mandatory fields only
+                        .setPassword("PaSsWorD")
+                        .setPasswordConfirmation("PaSsWorD")}, //regular user with mandatory fields only
                 new Object[]{new UserObject()
                         .setLogin("!\"#$%&'()*+,-.0123456789:;=?@ABCDEFGHIJKLMNOPQR")
                         .setPassword("!\"#$%&'()*+,-.0123456789:;=?@ABCDEFGHIJKLMNOPQR<>/")
                         .setPasswordConfirmation("!\"#$%&'()*+,-.0123456789:;=?@ABCDEFGHIJKLMNOPQR<>/")
                         .setForcePasswordChangeCheckbox(true)
-                        .setFullName("!\"#$%&'()*+,-.0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
-                        .setJabber("!\"#$%&'()*+,-.0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
-                        .setEmail("!\"#$%&'()*+,-.0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~")}, //all basic Latin symbols part 1 for all fields
+                        .setFullName("!#$%&()*+,-.0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
+                        .setJabber("!#$%&()*+,-.0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
+                        .setEmail("!#$%&()*+,-.0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~")}, //all basic Latin symbols part 1 for all fields
                 new Object[]{new UserObject()
                         .setLogin("STUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
                         .setPassword("STUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
                         .setPasswordConfirmation("STUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
                         .setForcePasswordChangeCheckbox(false)
                         .setFullName("VWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~")}, //all basic Latin symbols part 2
-//                new Object[]{new UserObject()
-//                        .setLogin("豈更車賈滑串句龜龜契金喇奈懶癩羅蘿螺裸邏樂洛烙珞落酪駱亂卵欄爛蘭鸞嵐濫藍襤拉臘蠟廊朗")  //magic redirect!!
-//                        .setPassword("password")
-//                        .setPasswordConfirmation("password")}, //CJK Compatibility Ideographs
-//                new Object[]{new UserObject()
-//                        .setLogin("a")
-//                        .setPassword("a")
-//                        .setPasswordConfirmation("a")}, //1 symbol account
-//                new Object[] {new UserObject().setLogin("132").setPassword("password").setPasswordConfirmation("password")},
-//                new Object[] {new UserObject().setLogin("1324").setPassword("password").setPasswordConfirmation("password")},
-//                new Object[] {new UserObject().setLogin("1326").setPassword("password").setPasswordConfirmation("password")},
-//                new Object[] {new UserObject().setLogin("1327").setPassword("password").setPasswordConfirmation("password")},
-//                new Object[] {new UserObject().setLogin("1328").setPassword("password").setPasswordConfirmation("password")},
-//                new Object[] {new UserObject().setLogin("1329").setPassword("password").setPasswordConfirmation("password")},
-//                new Object[] {new UserObject().setLogin("132911").setPassword("password").setPasswordConfirmation("password")},
-//                new Object[] {new UserObject().setLogin("</>").setPassword("password").setPasswordConfirmation("password")}, //negative
+                new Object[]{new UserObject()
+                        .setLogin("豈更車賈滑串句龜龜契金喇奈懶癩羅蘿螺裸邏樂洛烙珞落酪駱亂卵欄爛蘭鸞嵐濫藍襤拉臘蠟廊朗")  //magic redirect!!
+                        .setPassword("password")
+                        .setPasswordConfirmation("password")}, //CJK Compatibility Ideographs
+                new Object[]{new UserObject()
+                        .setLogin("a")
+                        .setPassword("a")
+                        .setPasswordConfirmation("a")
+                        .setEmail("Email")}, //1 symbol account
+                new Object[]{new UserObject()
+                        .setLogin("1")
+                        .setPassword("1")
+                        .setPasswordConfirmation("1")
+                        .setJabber("Jabber")},
+                new Object[]{new UserObject()
+                        .setLogin("@")
+                        .setPassword("@")
+                        .setPasswordConfirmation("@")},
+                new Object[]{new UserObject()
+                        .setLogin("äöü")
+                        .setPassword("äöü")
+                        .setPasswordConfirmation("äöü")
+                        .setFullName("äöü")
+                        .setEmail("äöü")
+                        .setJabber("äöü")},
+                new Object[]{new UserObject()
+                        .setLogin("a")
+                        .setPassword("a")
+                        .setPasswordConfirmation("a")
+                        .setFullName("n a m e")
+                        .setEmail("e m a i l")
+                        .setJabber("j a b b e r")},
+//                Comments:
+//                </> //negative. Not allowed for the login field
+//                '" could not be checked for the full name, jabber and email fields because it could not be used in xpath and I am not able to get this fields in other way
         };
     }
 
@@ -151,8 +170,16 @@ public class testExecutor {
                 .fillCreateUserDialogFieldsAccordingToTestData(app, currentUser)
                 .clickOkButton();
         app.onEditUserPage()
-                .wasEditUserPageLoaded();
+                .wasEditUserPageLoaded()
+                .clickOnUsersLinkInLeftSidebar();
+        app.onUsersPage()
+                .isUsersPageLoaded()
+                .checkExistingUserFieldsAccordingToTestData(currentUser);
     }
-
+    //login under the new user
+    //check force password change button
+    //check cancel button
+    //input more than field allows
+    //copy paste in fields
 
 }

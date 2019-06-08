@@ -15,7 +15,7 @@ public class EditUserPageHelper extends DriverBasedHelper {
     }
 
     @Step("Check page URL and wait until JS is loaded")
-    EditUserPageHelper clickOnUsersLinkInLeftSidebar() {
+    public EditUserPageHelper clickOnUsersLinkInLeftSidebar() {
         pages.administrationPage().getLeftSidebarElement(LeftAdminPanel.users).click();
         return this;
     }

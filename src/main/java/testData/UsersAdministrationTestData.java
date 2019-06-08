@@ -16,6 +16,10 @@ public class UsersAdministrationTestData {
     public static final String XPATH_CREATE_NEW_USER_DIALOG = ".//*[contains (@id ,'createUserDialog')]";
     //////////////////////Users list//////////////////////
     public static final String XPATH_COLUMN_FROM_THE_ROW = ".//*[contains (@id ,'{{ val }}')]";
+    public static final String XPATH_COLUMN_FROM_THE_ROW_BY_TITLE = ".//td/*[@title = '{{ val }}']";
+    public static final String XPATH_LAST_ACCESS_COLUMN = ".//td[@class = 'align-center']";
+    public static final String XPATH_ALL_USERS_GROUP_LINK = ".//td//a[@href = '/editGroup/All%20Users']";
+    public static final String XPATH_NEW_USERS_GROUP_LINK = ".//td//a[@href = '/editGroup/New%20Users']";
     public static final String XPATH_NO_USERS_FOUND_NOTIFICATION = ".//p[@class = 'note']";
     public static final String XPATH_AMOUNT_OF_USERS = ".//*[@class = 'light']";
 }

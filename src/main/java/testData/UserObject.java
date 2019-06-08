@@ -19,5 +19,5 @@ public class UserObject {
     private String fullName;
     private String email;
     private String jabber;
-
+    private String lastAccess = "—";
 }

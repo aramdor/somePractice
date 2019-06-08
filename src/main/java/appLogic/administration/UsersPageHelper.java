@@ -5,6 +5,7 @@ import atlasInstances.pages.administration.CreateUserForm;
 import atlasInstances.pages.administration.FindUserPanel;
 import atlasInstances.pages.administration.UsersListRow;
 import io.qameta.allure.Step;
+import org.openqa.selenium.NoSuchElementException;
 import org.testng.Assert;
 import testData.EditUserTestData;
 import testData.LoginTestData;
@@ -34,7 +35,7 @@ public class UsersPageHelper extends DriverBasedHelper {
     public UsersPageHelper deleteAllUsersIfUserLimitIsExceeded() {
         if (pages.administrationPage().getUserPanelContainer().getUsersListTable().getAmountOfUsers().getText().trim().contentEquals("(11 total)")) {
             int k = pages.administrationPage().getUserPanelContainer().getUsersListTable().getAllElementsFromTheUsersTable(UsersListRow.deleteButton).size() - 1; //-1 is added because we are not able to delete guest user but it has delete button
-            for (int i=0; i < k; i++) {
+            for (int i = 0; i < k; i++) {
                 Optional<UsersListRow> userToDelete = pages.administrationPage().getUserPanelContainer().getUsersListTable().getTableRows().stream().filter(user -> {
                     String currentName = user.getColumnFromTheRow(UsersListRow.login).getText();
                     return !currentName.contentEquals("guest") &&
@@ -42,7 +43,7 @@ public class UsersPageHelper extends DriverBasedHelper {
                             !currentName.contentEquals("root");
                 }).findFirst();
                 if (userToDelete.isPresent()) {
-                userToDelete.get().getColumnFromTheRow(UsersListRow.deleteButton).click();
+                    userToDelete.get().getColumnFromTheRow(UsersListRow.deleteButton).click();
                     Utils.clickOkForAlertPopup(ApplicationManager.getDriverStatic());
                 }
             }
@@ -190,8 +191,29 @@ public class UsersPageHelper extends DriverBasedHelper {
     }
 
     @Step("Fill the username in the Administration -> Users -> Create new user dialog")
-    public UsersPageHelper checkExistingUserFieldsAccordingToTestData (UserObject userData) {
+    public UsersPageHelper checkExistingUserFieldsAccordingToTestData(UserObject userData) {
         Optional<UsersListRow> user = getRowByExactlyTheSameLogin(userData.getLogin()); //TODO add checks for all fields
+        if (user.isPresent()) {
+            if (userData.getFullName() != null) {
+                Assert.assertEquals(user.get().getFullNameOrEmailFieldFromTheRow(userData.getFullName()).getText().trim(), userData.getFullName(), "Full name did not match");
+            }
+            if (userData.getEmail() != null) {
+                Assert.assertEquals(user.get().getFullNameOrEmailFieldFromTheRow(userData.getEmail()).getText().trim(), userData.getEmail(), "Email did not match");
+            }
+            if (userData.getJabber() != null) {
+                Assert.assertEquals(user.get().getFullNameOrEmailFieldFromTheRow(userData.getJabber()).getText().trim(), userData.getJabber(), "Jabber did not match");
+            }
+            Assert.assertEquals(user.get().getLastAccess().getText().trim(), userData.getLastAccess(), "Last access field did not match");
+            try {
+                Assert.assertTrue(user.get().getAllUsersGroupLink().isDisplayed(), "All users default group was NOT added");
+                Assert.assertTrue(user.get().getNewUsersGroupLink().isDisplayed(), "New users default group was NOT added");
+            }
+            catch (NoSuchElementException ex) {
+                Assert.fail("Default groups were NOT added");
+            }
+        } else {
+            Assert.fail("User was not found!");
+        }
         return this;
     }
 
