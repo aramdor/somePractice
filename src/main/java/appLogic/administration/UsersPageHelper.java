@@ -44,16 +44,7 @@ public class UsersPageHelper extends DriverBasedHelper {
                 if (userToDelete.isPresent()) {
                 userToDelete.get().getColumnFromTheRow(UsersListRow.deleteButton).click();
                     Utils.clickOkForAlertPopup(ApplicationManager.getDriverStatic());
-                };
-//                    .forEach(user -> {
-//                        pages.administrationPage().getUserPanelContainer().getUsersListTable().getAllElementsFromTheUsersTable(UsersListRow.deleteButton).get(0).click();
-//                        Utils.clickOkForAlertPopup(ApplicationManager.getDriverStatic());
-//                        if (!isMessagePopupDisplayed()) //TODO: does not work!! reimplement
-//                        {
-//                            pages.administrationPage().getUserPanelContainer().getUsersListTable().getAllElementsFromTheUsersTable(UsersListRow.deleteButton).get(1).click();
-//                            Utils.clickOkForAlertPopup(ApplicationManager.getDriverStatic());
-//                        }
-//                    });
+                }
             }
             Assert.assertTrue(pages.administrationPage().getUserPanelContainer().getCreateUserButton().isDisplayed(), "Create new user button is still not displayed!!");
         }
