@@ -14,6 +14,7 @@ public class CommonTestData {
     ////////////////////Default form xpaths - tables and popups////////////////////
     public static final String XPATH_TABLE_ROWS = ".//tbody//tr";
     public static final String XPATH_POPUP = "//*[contains(@id,'popup')]";
+    public static final String XPATH_MESSAGE_POPUP = "//*[contains(@id,'popup') and (@class='message ')]";
     public static final String XPATH_ERROR_DESCRIPTION = ".//td[not(@class)]";
 
 

@@ -13,6 +13,11 @@ public interface Popup extends AtlasWebElement, Table {
     @FindBy(CommonTestData.XPATH_POPUP)
     Popup getPopupContainer();
 
+    @Description("Get message popup")
+    @Retry(timeout = 5000)
+    @FindBy(CommonTestData.XPATH_MESSAGE_POPUP)
+    Popup getMessagePopupContainer();
+
     @Description("Get first popup")
     @Retry(timeout = 5000)
     @FindBy(CommonTestData.XPATH_TABLE_ROWS)

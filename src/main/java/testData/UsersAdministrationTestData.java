@@ -16,4 +16,5 @@ public class UsersAdministrationTestData {
     //////////////////////Users list//////////////////////
     public static final String XPATH_COLUMN_FROM_THE_ROW = ".//*[contains (@id ,'{{ val }}')]";
     public static final String XPATH_NO_USERS_FOUND_NOTIFICATION = ".//p[@class = 'note']";
+    public static final String XPATH_AMOUNT_OF_USERS = ".//*[@class = 'light']";
 }

@@ -12,7 +12,9 @@ import testData.UsersAdministrationTestData;
 import utils.ApplicationManager;
 import utils.Utils;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class UsersPageHelper extends DriverBasedHelper {
 
@@ -28,6 +30,24 @@ public class UsersPageHelper extends DriverBasedHelper {
 
 
     ///////////////////////////////////////Create new user///////////////////////////////////////
+
+    @Step("Make sure that we are able to create new user. If no let's delete all users")
+    public UsersPageHelper deleteAllUsersIfUserLimitIsExceeded() {
+        if (pages.administrationPage().getUserPanelContainer().getUsersListTable().getAmountOfUsers().getText().trim().contentEquals("(11 total)")) {
+            pages.administrationPage().getUserPanelContainer().getUsersListTable().getAllElementsFromTheUsersTable(UsersListRow.deleteButton)
+                    .forEach(user -> {
+                        pages.administrationPage().getUserPanelContainer().getUsersListTable().getAllElementsFromTheUsersTable(UsersListRow.deleteButton).get(0).click();
+                        Utils.clickOkForAlertPopup(ApplicationManager.getDriverStatic());
+                        if (!isMessagePopupDisplayed()) //TODO: does not work!! reimplement
+                        {
+                            pages.administrationPage().getUserPanelContainer().getUsersListTable().getAllElementsFromTheUsersTable(UsersListRow.deleteButton).get(1).click();
+                            Utils.clickOkForAlertPopup(ApplicationManager.getDriverStatic());
+                        }
+                    });
+            Assert.assertTrue(pages.administrationPage().getUserPanelContainer().getCreateUserButton().isDisplayed(), "Create new user button is still not displayed!!");
+        }
+        return this;
+    }
 
     @Step("Click on the create new user button to invoke Create new user dialog")
     public UsersPageHelper openCreateNewUserDialog() {
@@ -97,8 +117,13 @@ public class UsersPageHelper extends DriverBasedHelper {
     @Step("Check \"Value should be unique\' popup")
     public void checkPopupError() {
         System.out.println(
-        pages.administrationPage().getPopupContainer().getFirstPopup().getErrorDescriptionField().getText()
+                pages.administrationPage().getPopupContainer().getFirstPopup().getErrorDescriptionField().getText()
         );
+    }
+
+    @Step("Check that message popup appears")
+    public Boolean isMessagePopupDisplayed() {
+        return pages.administrationPage().getPopupContainer().getMessagePopupContainer().isDisplayed();
     }
 
     ///////////////////////////////////////Find existing user///////////////////////////////////////
@@ -116,13 +141,14 @@ public class UsersPageHelper extends DriverBasedHelper {
 
     ///////////////////////////////////////Users list///////////////////////////////////////
     @Step("Get users list in the Administration -> Users")
-    public UsersPageHelper deleteUserWithExactlyTheSameName(String fullMatch) {
+    public UsersPageHelper deleteUserWithExactlyTheSameLogin(String fullMatch) {
         isUsersListTableEmpty();
         Optional<UsersListRow> usersListRow = getRowByExactlyTheSameLogin(fullMatch);
         if (usersListRow.isPresent()) {
             usersListRow.get().getColumnFromTheRow(UsersListRow.deleteButton).click();
             Utils.clickOkForAlertPopup(ApplicationManager.getDriverStatic());
         }
+        isUsersPageLoaded();
         return this;
     }
 
@@ -155,7 +181,7 @@ public class UsersPageHelper extends DriverBasedHelper {
         return this;
     }
 
-    @Step("Find user with exacly the same login, name or email")
+    @Step("Find user with exactly the same login, name or email")
     private Optional<UsersListRow> getRowByExactlyTheSameLogin(String fullMatch) {
         return pages.administrationPage().getUserPanelContainer().getUsersListTable()
                 .getTableRows().stream().filter(row -> row.getColumnFromTheRow(UsersListRow.login).getText().contentEquals(fullMatch)).findFirst();
@@ -183,10 +209,36 @@ public class UsersPageHelper extends DriverBasedHelper {
                     .isUsersPageLoaded();
             doesUserAlreadyExistsWithAssert(user.getLogin());
             return this;
-        }
-        else {
+        } else {
             return this;
         }
     }
 
+    @Step("Create new user based on existing test date (Administration -> Users page)")
+    public UsersPageHelper fillCreateUserDialogFieldsAccordingToTestData(ApplicationManager app, UserObject user) {
+        if (user.getLogin() != null) {
+            app.onUsersPage().fillLoginField(user.getLogin());
+        }
+        if (user.getPassword() != null) {
+            app.onUsersPage().fillPasswordField(user.getPassword());
+        }
+        if (user.getPasswordConfirmation() != null) {
+            app.onUsersPage().fillConfirmPasswordField(user.getPasswordConfirmation());
+        }
+        if (user.getForcePasswordChangeCheckbox() != null) {
+            if (user.getForcePasswordChangeCheckbox()) {
+                app.onUsersPage().clickOnTheForcePasswordChangeCheckbox();
+            }
+        }
+        if (user.getFullName() != null) {
+            app.onUsersPage().fillFullNameField(user.getFullName());
+        }
+        if (user.getEmail() != null) {
+            app.onUsersPage().fillEmailField(user.getEmail());
+        }
+        if (user.getJabber() != null) {
+            app.onUsersPage().fillJabberField(user.getJabber());
+        }
+        return this;
+    }
 }

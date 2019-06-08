@@ -4,6 +4,7 @@ import io.qameta.allure.Owner;
 import org.testng.ITestContext;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import testData.LoginTestData;
 import testData.UserObject;
@@ -47,6 +48,7 @@ public class testExecutor {
         app.onUsersPage()
                 .isUsersPageLoaded()
                 .doesUserAlreadyExistsWithAssert(currentUser.getLogin())
+                .deleteAllUsersIfUserLimitIsExceeded()
                 .openCreateNewUserDialog()
                 .fillLoginField(currentUser.getLogin())
                 .fillPasswordField(currentUser.getPassword())
@@ -70,7 +72,7 @@ public class testExecutor {
                 .isUsersPageLoaded()
                 .fillFindField(currentUser.getLogin())
                 .startSearch()
-                .deleteUserWithExactlyTheSameName(currentUser.getLogin())
+                .deleteUserWithExactlyTheSameLogin(currentUser.getLogin())
         ;
     }
 
@@ -83,6 +85,7 @@ public class testExecutor {
 
         app.onUsersPage()
                 .isUsersPageLoaded()
+                .deleteAllUsersIfUserLimitIsExceeded()
                 .createUserIfItDoesNotExists(app, currentUser)
                 .openCreateNewUserDialog()
                 .fillLoginField(currentUser.getLogin())
@@ -94,6 +97,30 @@ public class testExecutor {
                 .fillJabberField(currentUser.getJabber())
                 .clickOkButton()
                 .checkPopupError();
+    }
+
+    @DataProvider(name = "validUsers")
+    public Object[][] userFormData() {
+        return new Object[][] {
+                new Object[] {new UserObject().setLogin("login1").setPassword("password").setPasswordConfirmation("password")},
+                new Object[] {new UserObject().setLogin("login12").setPassword("password").setPasswordConfirmation("password")},
+                new Object[] {new UserObject().setLogin("login132").setPassword("password").setPasswordConfirmation("password")},
+        };
+    }
+
+    @Owner("Iaroslav Stepanov")
+    @Test(dataProvider = "validUsers")
+    @Description("Positive test: Create users with all fields combinations")
+    public void createNewUserWithMandatoryFields(UserObject currentUser) {
+        app.onUsersPage()
+                .isUsersPageLoaded()
+                .deleteUserWithExactlyTheSameLogin(currentUser.getLogin())
+                .deleteAllUsersIfUserLimitIsExceeded()
+                .openCreateNewUserDialog()
+                .fillCreateUserDialogFieldsAccordingToTestData(app, currentUser)
+                .clickOkButton();
+        app.onEditUserPage()
+                .wasEditUserPageLoaded();
     }
 
 

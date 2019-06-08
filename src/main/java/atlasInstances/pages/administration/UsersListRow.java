@@ -11,7 +11,7 @@ public interface UsersListRow extends AtlasWebElement {
     String login = "usersList.UserLogin";
     String deleteButton = "usersList.deleteUser";
 
-    @Description("Search for the user login column value")
+    @Description("Search for the user {{ val }} column value")
     @Retry(timeout = 5000)
     @FindBy(UsersAdministrationTestData.XPATH_COLUMN_FROM_THE_ROW)
     AtlasWebElement getColumnFromTheRow(@Param("val") String fieldName);
