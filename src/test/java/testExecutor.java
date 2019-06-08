@@ -16,7 +16,7 @@ public class testExecutor {
 
     ///////////////////////////////Before and after actions///////////////////////////////
 
-    @BeforeMethod
+    @BeforeMethod(alwaysRun = true)
     public void driverInit(ITestContext iTestContext) {
         app = new ApplicationManager(iTestContext);
         app.getDriver();
