@@ -5,6 +5,7 @@ import atlasInstances.elements.LeftAdminPanel;
 import io.qameta.allure.Step;
 import org.openqa.selenium.NoSuchElementException;
 import org.testng.Assert;
+import testData.CommonTestData;
 import testData.EditUserTestData;
 import utils.ApplicationManager;
 
@@ -14,7 +15,7 @@ public class EditUserPageHelper extends PageWithTopToolbarHelper {
         super(app);
     }
 
-    @Step("Check page URL and wait until JS is loaded")
+    @Step("Open Users Administration page via the Left side bar")
     public EditUserPageHelper clickOnUsersLinkInLeftSidebar() {
         pages.administrationPage().getLeftSidebarElement(LeftAdminPanel.users).click();
         return this;
@@ -25,8 +26,7 @@ public class EditUserPageHelper extends PageWithTopToolbarHelper {
         urlContains(EditUserTestData.URL_EDIT_USER_PAGE_BASE_PART);
         try {
             Assert.assertTrue(pages.administrationPage().getEditUserPanelContainer().isDisplayed(), "Edit user panel is NOT displayed!!");
-        }
-        catch (NoSuchElementException ex) {
+        } catch (NoSuchElementException ex) {
             Assert.fail("Edit user panel is NOT displayed!!");
         }
         return this;

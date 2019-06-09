@@ -1,5 +1,6 @@
 package atlasInstances.pages.administration;
 
+import atlasInstances.pages.user.UserProfilePage;
 import io.qameta.allure.Description;
 import io.qameta.atlas.core.api.Retry;
 import io.qameta.atlas.webdriver.AtlasWebElement;
@@ -14,9 +15,6 @@ public interface UserPanel extends WebPage, AtlasWebElement {
     @FindBy(UsersAdministrationTestData.XPATH_CREATE_NEW_USER_BUTTON)
     AtlasWebElement getCreateUserButton();
 
-
-    String createNesUserDialogIsDisplayed = "block";
-    String createNesUserDialogIsNotDisplayed = "none";
     @Description("Search for the administration -> Users -> Create new user dialog")
     @Retry(timeout = 5000)
     @FindBy(UsersAdministrationTestData.XPATH_CREATE_NEW_USER_DIALOG)

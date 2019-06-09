@@ -20,6 +20,10 @@ public class CommonTestData {
     public static final String XPATH_MESSAGE_POPUP = "//*[contains(@id,'popup') and (@class='message ')]";
     public static final String XPATH_ERROR_DESCRIPTION = ".//td[not(@class)]";
 
+    ////////////////////Is element shown////////////////////
+    public static final String dialogIsShown = "block";
+    public static final String dialogIsNotShown = "none";
+
 
 
 }

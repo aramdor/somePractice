@@ -79,7 +79,7 @@ public class testExecutor {
     }
 
     @DataProvider(name = "validUsers")
-    public Object[][] userFormData() {
+    public Object[][] createUserTestData() {
         return new Object[][]{
                 new Object[]{new UserObject()
                         .setLogin("login")
@@ -138,7 +138,7 @@ public class testExecutor {
     }
 
     @Owner("Iaroslav Stepanov")
-    @Test(dataProvider = "validUsers")
+    @Test(dataProvider = "createUserTestData")
     @Description("Positive test: Create users with all fields combinations")
     public void createNewUserPositive(UserObject currentUser) {
         app.onUsersPage()
@@ -174,13 +174,30 @@ public class testExecutor {
                 .areCreateNewUserDialogFieldsEmpty();
     }
 
-    @Owner("Iaroslav Stepanov")
-    @Test
-    @Description("Create new user and login under it (without password change!)")
-    public void createNewUserAndLogin() {
-        UserObject currentUser = baseUser;
-        currentUser.setForcePasswordChangeCheckbox(false);
+    @DataProvider(name = "forcePasswordChange")
+    public Object[][] forcePasswordChangeTestData() {
+        return new Object[][]{
+                new Object[]{new UserObject()
+                        .setLogin("Vasiliy") //let's check that change password dialog did NOT appear if force password change checkbox was marked
+                        .setPassword("PaSsWorD")
+                        .setPasswordConfirmation("PaSsWorD")
+                        .setFullName("Vasiliy Testov")}, //also we will check that full name is shown in the top toolbar if it is specified
+                new Object[]{new UserObject()
+                        .setLogin("Vasiliy")
+                        .setPassword("PaSsWorD")
+                        .setPasswordConfirmation("PaSsWorD")}, //also we will check that login name is shown in the top toolbar if full name is NOT specified
+                new Object[]{new UserObject() //let's check that change password dialog appears at first login
+                        .setLogin("Vasiliy")
+                        .setPassword("PaSsWorD")
+                        .setPasswordConfirmation("PaSsWorD")
+                        .setForcePasswordChangeCheckbox(true)},
+        };
+    }
 
+    @Owner("Iaroslav Stepanov")
+    @Test(dataProvider = "forcePasswordChange")
+    @Description("Create new user and login under it. With and without password change!")
+    public void createNewUserAndLogin(UserObject currentUser) {
         app.onUsersPage()
                 .isUsersPageLoaded()
                 .deleteUserWithExactlyTheSameLogin(currentUser.getLogin())
@@ -190,7 +207,7 @@ public class testExecutor {
                 .clickOkButton();
         app.onEditUserPage()
                 .wasEditUserPageLoaded();
-        app.openUrlAndWait(DashboardTestData.URL_DASHBOARD);
+        app.openUrlAndWait(DashboardTestData.URL_DASHBOARD); //if we logout from the current page, then after login we will see not enough permissions error screen. So we are opening Dashboard
         app.onDashboardPage()
                 .openUserNameDropdown()
                 .clickOnFieldInDropdown(CommonTestData.LOGOUT_HREF);
@@ -199,12 +216,19 @@ public class testExecutor {
                 .inputUsername(currentUser.getLogin())
                 .inputPassword(currentUser.getPassword())
                 .submit();
-        app.onDashboardPage()
-                .isPageLoaded()
-                .checkUserName(currentUser);
+        if (currentUser.getForcePasswordChangeCheckbox() != null && currentUser.getForcePasswordChangeCheckbox()) {
+            app.onUserProfilePage()
+                    .isPageLoaded()
+                    .isChangePasswordDialogDisplayed(currentUser.getForcePasswordChangeCheckbox());
+        } else {
+            app.onDashboardPage()
+                    .isPageLoaded()
+                    .checkUserName(currentUser);
+        }
     }
-    //check force password change button
+    //
     //input more than field allows
     //copy paste in fields
     //create new user button disappears if user limit is exceeded
+    //check password and confirm password fields type to be sure that user will see * instead of his password (security check)
 }

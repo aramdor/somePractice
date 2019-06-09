@@ -3,13 +3,13 @@ package appLogic.administration;
 import appLogic.DriverBasedHelper;
 import atlasInstances.pages.administration.CreateUserForm;
 import atlasInstances.pages.administration.FindUserPanel;
-import atlasInstances.pages.administration.UserPanel;
 import atlasInstances.pages.administration.UsersListRow;
 import io.qameta.allure.Step;
 import io.qameta.atlas.webdriver.AtlasWebElement;
 import org.openqa.selenium.NoSuchElementException;
 import org.testng.Assert;
 import org.testng.asserts.SoftAssert;
+import testData.CommonTestData;
 import testData.LoginTestData;
 import testData.UserObject;
 import testData.UsersAdministrationTestData;
@@ -47,6 +47,7 @@ public class UsersPageHelper extends DriverBasedHelper {
                 if (userToDelete.isPresent()) {
                     userToDelete.get().getColumnFromTheRow(UsersListRow.deleteButton).click();
                     Utils.clickOkForAlertPopup(ApplicationManager.getDriverStatic());
+                    isUsersPageLoaded();
                 }
             }
             Assert.assertTrue(pages.administrationPage().getUserPanelContainer().getCreateUserButton().isDisplayed(), "Create new user button is still not displayed!!");
@@ -71,7 +72,7 @@ public class UsersPageHelper extends DriverBasedHelper {
     }
 
     private AtlasWebElement getCreateNewUserDialogField(String fieldIdentifier) {
-        return pages.administrationPage().getUserPanelContainer().getCreateNewUserDialog(UserPanel.createNesUserDialogIsDisplayed).getField(fieldIdentifier);
+        return pages.administrationPage().getUserPanelContainer().getCreateNewUserDialog(CommonTestData.dialogIsShown).getField(fieldIdentifier);
     }
 
     @Step("Check that all fields of the Administration -> Users -> Create new user dialog are empty")
@@ -83,7 +84,7 @@ public class UsersPageHelper extends DriverBasedHelper {
         softAssert.assertEquals( getCreateNewUserDialogField(CreateUserForm.fullName).getText().trim(), "", "Full name field is NOT empty!");
         softAssert.assertEquals( getCreateNewUserDialogField(CreateUserForm.email).getText().trim(), "", "Email field is NOT empty!");
         softAssert.assertEquals( getCreateNewUserDialogField(CreateUserForm.jabber).getText().trim(), "", "Jabber field is NOT empty!");
-        //TODO add checkbox verification
+        softAssert.assertEquals( getCreateNewUserDialogField(CreateUserForm.confirmPassword).isSelected(), false, "Force password change checkbox is NOT turned off!");
         softAssert.assertAll();
         return this;
     }
@@ -108,7 +109,7 @@ public class UsersPageHelper extends DriverBasedHelper {
 
     @Step("Click on the password change checkbox in the Administration -> Users -> Create new user dialog")
     public UsersPageHelper clickOnTheForcePasswordChangeCheckbox() {
-        pages.administrationPage().getUserPanelContainer().getCreateNewUserDialog(UserPanel.createNesUserDialogIsDisplayed).getCheckbox(CreateUserForm.forcePasswordChange).click();
+        pages.administrationPage().getUserPanelContainer().getCreateNewUserDialog(CommonTestData.dialogIsShown).getCheckbox(CreateUserForm.forcePasswordChange).click();
         return this;
     }
 
@@ -132,13 +133,13 @@ public class UsersPageHelper extends DriverBasedHelper {
 
     @Step("Click on the Ok (confirm user creation button) in the Administration -> Users -> Create new user dialog")
     public UsersPageHelper clickOkButton() {
-        pages.administrationPage().getUserPanelContainer().getCreateNewUserDialog(UserPanel.createNesUserDialogIsDisplayed).getButton(CreateUserForm.Ok).click();
+        pages.administrationPage().getUserPanelContainer().getCreateNewUserDialog(CommonTestData.dialogIsShown).getButton(CreateUserForm.Ok).click();
         return this;
     }
 
     @Step("Click on the Cancel (reject user creation button) in the Administration -> Users -> Create new user dialog")
     public UsersPageHelper clickCancelButton() {
-        pages.administrationPage().getUserPanelContainer().getCreateNewUserDialog(UserPanel.createNesUserDialogIsDisplayed).getButton(CreateUserForm.Cancel).click();
+        pages.administrationPage().getUserPanelContainer().getCreateNewUserDialog(CommonTestData.dialogIsShown).getButton(CreateUserForm.Cancel).click();
         return this;
     }
     //^^^Fill the XXX field in the Administration -> Users -> Create new user dialog"^^^
@@ -159,13 +160,13 @@ public class UsersPageHelper extends DriverBasedHelper {
     public UsersPageHelper isCreateNewUserDialogDisplayed(Boolean expectedResult) {
         if (expectedResult) {
             try {
-                pages.administrationPage().getUserPanelContainer().getCreateNewUserDialog(UserPanel.createNesUserDialogIsDisplayed).isDisplayed();
+                pages.administrationPage().getUserPanelContainer().getCreateNewUserDialog(CommonTestData.dialogIsShown).isDisplayed();
             } catch (NoSuchElementException ex) {
                 Assert.fail("Seems to be that create new user dialog was NOT opened!");
             }
         } else {
             try {
-                pages.administrationPage().getUserPanelContainer().getCreateNewUserDialog(UserPanel.createNesUserDialogIsNotDisplayed).getTagName();
+                pages.administrationPage().getUserPanelContainer().getCreateNewUserDialog(CommonTestData.dialogIsNotShown).getTagName();
             } catch (NoSuchElementException ex) {
                 Assert.fail("Seems to be that create new user dialog was NOT closed!");
             }
@@ -238,29 +239,31 @@ public class UsersPageHelper extends DriverBasedHelper {
                 .getTableRows().stream().filter(row -> row.getColumnFromTheRow(UsersListRow.login).getText().contentEquals(fullMatch)).findFirst();
     }
 
-    @Step("Fill the username in the Administration -> Users -> Create new user dialog")
+    @Step("Check that values in the Users table contains same values which were used at the user creation")
     public UsersPageHelper checkExistingUserFieldsAccordingToTestData(UserObject userData) {
-        Optional<UsersListRow> user = getRowByExactlyTheSameLogin(userData.getLogin()); //TODO add checks for all fields
+        Optional<UsersListRow> user = getRowByExactlyTheSameLogin(userData.getLogin());
+        SoftAssert softAssert = new SoftAssert();
         if (user.isPresent()) {
             if (userData.getFullName() != null) {
-                Assert.assertEquals(user.get().getFullNameOrEmailFieldFromTheRow(userData.getFullName()).getText().trim(), userData.getFullName(), "Full name did not match");
+                softAssert.assertEquals(user.get().getFullNameOrEmailFieldFromTheRow(userData.getFullName()).getText().trim(), userData.getFullName(), "Full name did not match");
             }
             if (userData.getEmail() != null) {
-                Assert.assertEquals(user.get().getFullNameOrEmailFieldFromTheRow(userData.getEmail()).getText().trim(), userData.getEmail(), "Email did not match");
+                softAssert.assertEquals(user.get().getFullNameOrEmailFieldFromTheRow(userData.getEmail()).getText().trim(), userData.getEmail(), "Email did not match");
             }
             if (userData.getJabber() != null) {
-                Assert.assertEquals(user.get().getFullNameOrEmailFieldFromTheRow(userData.getJabber()).getText().trim(), userData.getJabber(), "Jabber did not match");
+                softAssert.assertEquals(user.get().getFullNameOrEmailFieldFromTheRow(userData.getJabber()).getText().trim(), userData.getJabber(), "Jabber did not match");
             }
-            Assert.assertEquals(user.get().getLastAccess().getText().trim(), userData.getLastAccess(), "Last access field did not match");
+            softAssert.assertEquals(user.get().getLastAccess().getText().trim(), userData.getLastAccess(), "Last access field did not match");
             try {
-                Assert.assertTrue(user.get().getAllUsersGroupLink().isDisplayed(), "All users default group was NOT added");
-                Assert.assertTrue(user.get().getNewUsersGroupLink().isDisplayed(), "New users default group was NOT added");
+                softAssert.assertTrue(user.get().getAllUsersGroupLink().isDisplayed(), "All users default group was NOT added");
+                softAssert.assertTrue(user.get().getNewUsersGroupLink().isDisplayed(), "New users default group was NOT added");
             } catch (NoSuchElementException ex) {
-                Assert.fail("Default groups were NOT added");
+                softAssert.fail("Default groups were NOT added");
             }
         } else {
             Assert.fail("User was not found!");
         }
+        softAssert.assertAll();
         return this;
     }
 
@@ -312,4 +315,6 @@ public class UsersPageHelper extends DriverBasedHelper {
         }
         return this;
     }
+
+    ////////////////////////////////^^^ Shortcuts ^^^////////////////////////////////
 }

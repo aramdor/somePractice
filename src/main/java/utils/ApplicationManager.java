@@ -1,9 +1,6 @@
 package utils;
 
-import appLogic.DashboardPageHelper;
-import appLogic.DriverBasedHelper;
-import appLogic.LoginPageHelper;
-import appLogic.PageWithTopToolbarHelper;
+import appLogic.*;
 import appLogic.administration.EditUserPageHelper;
 import appLogic.administration.UsersPageHelper;
 import org.openqa.selenium.WebDriver;
@@ -31,6 +28,7 @@ public class ApplicationManager {
     private DashboardPageHelper dashboardPageHelper;
     private UsersPageHelper usersPageHelper;
     private EditUserPageHelper editUserPageHelper;
+    private UserProfilePageHelper userProfilePageHelper;
 
     public LoginPageHelper onLoginPage() {
         return loginPageHelper;
@@ -38,6 +36,7 @@ public class ApplicationManager {
     public DashboardPageHelper onDashboardPage() { return dashboardPageHelper; }
     public UsersPageHelper onUsersPage() { return usersPageHelper; }
     public EditUserPageHelper onEditUserPage() { return editUserPageHelper; }
+    public UserProfilePageHelper onUserProfilePage() { return userProfilePageHelper; }
 
     public ApplicationManager(ITestContext iTestContext) {
         this.iTestContext = iTestContext;
@@ -45,6 +44,7 @@ public class ApplicationManager {
         dashboardPageHelper = new DashboardPageHelper(this);
         usersPageHelper = new UsersPageHelper(this);
         editUserPageHelper = new EditUserPageHelper(this);
+        userProfilePageHelper = new UserProfilePageHelper(this);
     }
 
 
