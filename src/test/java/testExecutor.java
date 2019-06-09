@@ -47,7 +47,7 @@ public class testExecutor {
 
         app.onUsersPage()
                 .isUsersPageLoaded()
-                .doesUserAlreadyExistsWithAssert(currentUser.getLogin())
+                .deleteUserWithExactlyTheSameLogin(currentUser.getLogin())
                 .deleteAllUsersIfUserLimitIsExceeded()
                 .openCreateNewUserDialog()
                 .fillLoginField(currentUser.getLogin())
@@ -176,9 +176,26 @@ public class testExecutor {
                 .isUsersPageLoaded()
                 .checkExistingUserFieldsAccordingToTestData(currentUser);
     }
+
+    @Owner("Iaroslav Stepanov")
+    @Test
+    @Description("Check that user was NOT created if users tap on Cancel button")
+    public void cancelNewUserCreation() {
+        UserObject currentUser = baseUser;
+        app.onUsersPage()
+                .isUsersPageLoaded()
+                .deleteUserWithExactlyTheSameLogin(currentUser.getLogin())
+                .deleteAllUsersIfUserLimitIsExceeded()
+                .openCreateNewUserDialog()
+                .fillCreateUserDialogFieldsAccordingToTestData(app, currentUser)
+                .clickCancelButton()
+                .isCreateNewUserDialogDisplayed(false)
+                .doesUserAlreadyExistsWithAssert(currentUser.getLogin(), false)
+                .openCreateNewUserDialog()
+                .areCreateNewUserDialogFieldsEmpty();
+    }
     //login under the new user
     //check force password change button
-    //check cancel button
     //input more than field allows
     //copy paste in fields
 

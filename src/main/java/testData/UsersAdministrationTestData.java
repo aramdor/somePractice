@@ -13,7 +13,7 @@ public class UsersAdministrationTestData {
     public static final String XPATH_USER_LIST = ".//*[contains (@id, 'usersList')]";
     //////////////////////Create new user//////////////////////
     public static final String XPATH_CREATE_NEW_USER_BUTTON = "//*[contains (@id ,'createNewUser')]";
-    public static final String XPATH_CREATE_NEW_USER_DIALOG = ".//*[contains (@id ,'createUserDialog')]";
+    public static final String XPATH_CREATE_NEW_USER_DIALOG = ".//*[contains (@id ,'createUserDialog') and contains(@style, 'display: {{ val }}')]";
     //////////////////////Users list//////////////////////
     public static final String XPATH_COLUMN_FROM_THE_ROW = ".//*[contains (@id ,'{{ val }}')]";
     public static final String XPATH_COLUMN_FROM_THE_ROW_BY_TITLE = ".//td/*[@title = '{{ val }}']";
