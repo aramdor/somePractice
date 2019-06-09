@@ -1,6 +1,6 @@
 package appLogic.administration;
 
-import appLogic.DriverBasedHelper;
+import appLogic.PageWithTopToolbarHelper;
 import atlasInstances.elements.LeftAdminPanel;
 import io.qameta.allure.Step;
 import org.openqa.selenium.NoSuchElementException;
@@ -8,7 +8,7 @@ import org.testng.Assert;
 import testData.EditUserTestData;
 import utils.ApplicationManager;
 
-public class EditUserPageHelper extends DriverBasedHelper {
+public class EditUserPageHelper extends PageWithTopToolbarHelper {
 
     public EditUserPageHelper(ApplicationManager app) {
         super(app);
@@ -29,6 +29,16 @@ public class EditUserPageHelper extends DriverBasedHelper {
         catch (NoSuchElementException ex) {
             Assert.fail("Edit user panel is NOT displayed!!");
         }
+        return this;
+    }
+
+    public EditUserPageHelper openUserNameDropdown() {
+        super.openUserNameDropdown();
+        return this;
+    }
+
+    public EditUserPageHelper clickOnFieldInDropdown(String fieldName) {
+        super.clickOnFieldInDropdown(fieldName);
         return this;
     }
 }

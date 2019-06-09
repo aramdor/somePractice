@@ -6,6 +6,8 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import testData.CommonTestData;
+import testData.DashboardTestData;
 import testData.LoginTestData;
 import testData.UserObject;
 import utils.ApplicationManager;
@@ -27,9 +29,9 @@ public class testExecutor {
                 .inputPassword(LoginTestData.PASSWORD)
                 .submit();
         app.onDashboardPage()
-                .isDashboardPageLoaded()
+                .isPageLoaded()
                 .openAdminDropdown()
-                .clickOnFieldInAdminDropdown(DropDown.administrationUsers);
+                .clickOnFieldInDropdown(DropDown.administrationUsers);
     }
 
     @AfterMethod
@@ -38,29 +40,6 @@ public class testExecutor {
     }
 
     ///////////////////////////////Test cases///////////////////////////////
-
-    @Owner("Iaroslav Stepanov")
-    @Test
-    @Description("Debug method to create new user")
-    public void createNewUser() {
-        UserObject currentUser = baseUser;
-
-        app.onUsersPage()
-                .isUsersPageLoaded()
-                .deleteUserWithExactlyTheSameLogin(currentUser.getLogin())
-                .deleteAllUsersIfUserLimitIsExceeded()
-                .openCreateNewUserDialog()
-                .fillLoginField(currentUser.getLogin())
-                .fillPasswordField(currentUser.getPassword())
-                .fillConfirmPasswordField(currentUser.getPasswordConfirmation())
-                .clickOnTheForcePasswordChangeCheckbox()
-                .fillFullNameField(currentUser.getFullName())
-                .fillEmailField(currentUser.getEmail())
-                .fillJabberField(currentUser.getJabber())
-                .clickOkButton();
-        app.onEditUserPage()
-                .wasEditUserPageLoaded();
-    }
 
     @Owner("Iaroslav Stepanov")
     @Test
@@ -194,9 +173,38 @@ public class testExecutor {
                 .openCreateNewUserDialog()
                 .areCreateNewUserDialogFieldsEmpty();
     }
-    //login under the new user
+
+    @Owner("Iaroslav Stepanov")
+    @Test
+    @Description("Create new user and login under it (without password change!)")
+    public void createNewUserAndLogin() {
+        UserObject currentUser = baseUser;
+        currentUser.setForcePasswordChangeCheckbox(false);
+
+        app.onUsersPage()
+                .isUsersPageLoaded()
+                .deleteUserWithExactlyTheSameLogin(currentUser.getLogin())
+                .deleteAllUsersIfUserLimitIsExceeded()
+                .openCreateNewUserDialog()
+                .fillCreateUserDialogFieldsAccordingToTestData(app, currentUser)
+                .clickOkButton();
+        app.onEditUserPage()
+                .wasEditUserPageLoaded();
+        app.openUrlAndWait(DashboardTestData.URL_DASHBOARD);
+        app.onDashboardPage()
+                .openUserNameDropdown()
+                .clickOnFieldInDropdown(CommonTestData.LOGOUT_HREF);
+        app.onLoginPage()
+                .isPageLoaded()
+                .inputUsername(currentUser.getLogin())
+                .inputPassword(currentUser.getPassword())
+                .submit();
+        app.onDashboardPage()
+                .isPageLoaded()
+                .checkUserName(currentUser);
+    }
     //check force password change button
     //input more than field allows
     //copy paste in fields
-
+    //create new user button disappears if user limit is exceeded
 }

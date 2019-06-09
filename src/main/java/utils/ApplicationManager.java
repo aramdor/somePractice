@@ -3,6 +3,7 @@ package utils;
 import appLogic.DashboardPageHelper;
 import appLogic.DriverBasedHelper;
 import appLogic.LoginPageHelper;
+import appLogic.PageWithTopToolbarHelper;
 import appLogic.administration.EditUserPageHelper;
 import appLogic.administration.UsersPageHelper;
 import org.openqa.selenium.WebDriver;

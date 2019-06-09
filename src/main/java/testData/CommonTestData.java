@@ -1,9 +1,12 @@
 package testData;
 
 public class CommonTestData {
+    public static final String LOGOUT_HREF = "#";
+
     /////////////////////////XPATHS/////////////////////////
     public static final String XPATH_DEFAULT_TOP_TOOLBAR = "//*[@class = 'ring-menu']";
     public static final String XPATH_DEFAULT_DROPDOWN = "//*[@class = 'ring-dropdown']";
+    public static final String XPATH_DROPDOWN_BY_HREF = ".//*[@href ='{{ val }}']";
 
     ////////////////////Default form xpaths////////////////////
     public static final String XPATH_DEFAULT_FIELD = ".//input[contains(@id,'{{ val }}') and not (@type='submit')]";

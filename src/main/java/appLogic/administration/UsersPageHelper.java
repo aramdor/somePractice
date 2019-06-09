@@ -6,12 +6,10 @@ import atlasInstances.pages.administration.FindUserPanel;
 import atlasInstances.pages.administration.UserPanel;
 import atlasInstances.pages.administration.UsersListRow;
 import io.qameta.allure.Step;
-import io.qameta.atlas.core.Atlas;
 import io.qameta.atlas.webdriver.AtlasWebElement;
 import org.openqa.selenium.NoSuchElementException;
 import org.testng.Assert;
 import org.testng.asserts.SoftAssert;
-import testData.EditUserTestData;
 import testData.LoginTestData;
 import testData.UserObject;
 import testData.UsersAdministrationTestData;
@@ -85,6 +83,7 @@ public class UsersPageHelper extends DriverBasedHelper {
         softAssert.assertEquals( getCreateNewUserDialogField(CreateUserForm.fullName).getText().trim(), "", "Full name field is NOT empty!");
         softAssert.assertEquals( getCreateNewUserDialogField(CreateUserForm.email).getText().trim(), "", "Email field is NOT empty!");
         softAssert.assertEquals( getCreateNewUserDialogField(CreateUserForm.jabber).getText().trim(), "", "Jabber field is NOT empty!");
+        //TODO add checkbox verification
         softAssert.assertAll();
         return this;
     }
@@ -202,11 +201,12 @@ public class UsersPageHelper extends DriverBasedHelper {
 
     @Step("Check that user with the same login present in the users list table in the (Administration -> Users page)")
     public UsersPageHelper doesUserAlreadyExistsWithAssert(String loginName, Boolean expectedResult) {
-        if ((expectedResult && doesUserAlreadyExists(loginName)) || (!expectedResult && !doesUserAlreadyExists(loginName))) {
+        Boolean resultOfTheCheck = doesUserAlreadyExists(loginName);
+        if ((expectedResult && resultOfTheCheck) || (!expectedResult && !resultOfTheCheck)) {
             return this;
         }
             else {
-            Assert.fail("It is expected that user: " + loginName + " does exists = " + expectedResult + ". But it does not!" );
+            Assert.fail("It is expected that user with login name: \"" + loginName + "\" does exists = " + expectedResult + ". But it is a " + resultOfTheCheck);
         }
         return this;
     }

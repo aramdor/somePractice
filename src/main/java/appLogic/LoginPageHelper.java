@@ -2,6 +2,7 @@ package appLogic;
 
 import atlasInstances.elements.LoginForm;
 import io.qameta.allure.Step;
+import testData.LoginTestData;
 import utils.ApplicationManager;
 
 public class LoginPageHelper extends DriverBasedHelper {
@@ -27,6 +28,12 @@ public class LoginPageHelper extends DriverBasedHelper {
     @Step("Find login button and click on it")
     public LoginPageHelper submit() {
         pages.loginPage().getLoginPageContainer().getLoginButton(LoginForm.login).click();
+        return this;
+    }
+
+    @Step("Check page URL and wait until JS is loaded")
+    public LoginPageHelper isPageLoaded() {
+        checkUrlAndWaitForJs(LoginTestData.URL_LOGIN_PAGE);
         return this;
     }
 }

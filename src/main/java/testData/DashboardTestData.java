@@ -7,4 +7,5 @@ public class DashboardTestData {
 
     /////////////////////////XPATHS/////////////////////////
     public static final String XPATH_ADMINISTRATION = ".//*[@title = 'Administration']";
+    public static final String XPATH_USER_NAME = ".//*[contains(@data-ring-dropdown, '\"label\":\"Log out\"')]";
 }

@@ -10,9 +10,10 @@ import testData.UsersAdministrationTestData;
 
 public interface DropDown extends AtlasWebElement {
     String administrationUsers = UsersAdministrationTestData.URL_USERS_ADMINISTRATION_RELATIVE;
+    String logOut = UsersAdministrationTestData.URL_USERS_ADMINISTRATION_RELATIVE;
 
-    @Description("administration dropdown field {{ val }}")
+    @Description("Dropdown field {{ val }}")
     @Retry(timeout = 5000)
-    @FindBy(CommonTestData.XPATH_DEFAULT_DROPDOWN)
+    @FindBy(CommonTestData.XPATH_DROPDOWN_BY_HREF)
     AtlasWebElement getDropdownField(@Param("val") String fieldName);
 }

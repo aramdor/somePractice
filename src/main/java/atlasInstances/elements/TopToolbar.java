@@ -13,6 +13,11 @@ public interface TopToolbar extends AtlasWebElement {
     @FindBy(DashboardTestData.XPATH_ADMINISTRATION)
     AtlasWebElement getAdministrationButton();
 
+    @Description("Search for the username dropdown button which contains Profile and Logout links")
+    @Retry(timeout = 5000)
+    @FindBy(DashboardTestData.XPATH_USER_NAME)
+    AtlasWebElement getUserNameButton();
+
     @Description("Get dropdown window")
     @Retry(timeout = 5000)
     @FindBy(CommonTestData.XPATH_DEFAULT_DROPDOWN)

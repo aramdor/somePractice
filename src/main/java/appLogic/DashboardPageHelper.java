@@ -2,28 +2,39 @@ package appLogic;
 
 import io.qameta.allure.Step;
 import testData.DashboardTestData;
+import testData.UserObject;
 import utils.ApplicationManager;
 
-public class DashboardPageHelper extends DriverBasedHelper {
+public class DashboardPageHelper extends PageWithTopToolbarHelper {
     public DashboardPageHelper(ApplicationManager app) {
         super(app);
     }
 
     @Step("Check page URL and wait until JS is loaded")
-    public DashboardPageHelper isDashboardPageLoaded() {
+    public DashboardPageHelper isPageLoaded() {
         checkUrlAndWaitForJs(DashboardTestData.URL_DASHBOARD);
         return this;
     }
 
-    @Step("Open administration dropdown")
     public DashboardPageHelper openAdminDropdown() {
-        pages.dashboardPage().getTopToolbar().getAdministrationButton().click();
+        super.openAdminDropdown();
         return this;
     }
 
-    @Step("Click on the element from the dropdown")
-    public DashboardPageHelper clickOnFieldInAdminDropdown(String fieldName) {
-        pages.dashboardPage().getTopToolbar().getDropdownWindow().getDropdownField(fieldName).click();
+    public DashboardPageHelper openUserNameDropdown() {
+        super.openUserNameDropdown();
         return this;
     }
+
+    public DashboardPageHelper clickOnFieldInDropdown(String fieldName) {
+        super.clickOnFieldInDropdown(fieldName);
+        return this;
+    }
+
+    public DashboardPageHelper checkUserName (UserObject user) {
+        super.checkCurrentUserName(user);
+        return this;
+    }
+
+
 }
