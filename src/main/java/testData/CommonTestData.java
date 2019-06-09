@@ -24,6 +24,11 @@ public class CommonTestData {
     public static final String dialogIsShown = "block";
     public static final String dialogIsNotShown = "none";
 
+    ////////////////////Bulb errors////////////////////
+    public static final String XPATH_DEFAULT_FIELD_WITH_BULB_ERROR = ".//input[contains(@id,'{{ val }}') and not (@type='submit') and (@class='jt-input form-has-error')]";
+    public static final String XPATH_ALL_BULB_ERRORS = "//*[@class='error-bulb2']";
+    public static final String XPATH_BULB_ERROR_TOOLTIP = "//*[@class='error-tooltip tooltip']";
+
 
 
 }

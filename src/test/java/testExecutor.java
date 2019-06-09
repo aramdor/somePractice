@@ -1,4 +1,5 @@
 import atlasInstances.elements.DropDown;
+import atlasInstances.pages.administration.CreateUserForm;
 import io.qameta.allure.Description;
 import io.qameta.allure.Owner;
 import org.testng.ITestContext;
@@ -6,10 +7,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import testData.CommonTestData;
-import testData.DashboardTestData;
-import testData.LoginTestData;
-import testData.UserObject;
+import testData.*;
 import utils.ApplicationManager;
 
 public class testExecutor {
@@ -93,6 +91,11 @@ public class testExecutor {
                         .setFullName("n a m e")
                         .setEmail("e m a i l")
                         .setJabber("j a b b e r")},
+                new Object[]{new UserObject() //let's create the user with " " instead of the password
+                        .setLogin("a")
+                        .setPassword(" ")
+                        .setPasswordConfirmation(" ")
+                        },
 //                Comments:
 //                '" could not be checked for the full name, jabber and email fields because it could not be used in xpath and I am not able to get this fields in other way
                 //input more than field allows
@@ -154,6 +157,11 @@ public class testExecutor {
                         .setPassword("PaSsWorD")
                         .setPasswordConfirmation("PaSsWorD")
                         .setForcePasswordChangeCheckbox(true)},
+                new Object[]{new UserObject() //let's try to login under the user with " " instead of the password
+                        .setLogin("Vasiliy")
+                        .setPassword("PaSsWorD")
+                        .setPasswordConfirmation("PaSsWorD")
+                        .setForcePasswordChangeCheckbox(true)},
         };
     }
 
@@ -192,7 +200,7 @@ public class testExecutor {
 
     @Owner("Iaroslav Stepanov")
     @Test
-    @Description("Negative test cases which invokes popups")
+    @Description("Try to create user with the same login name")
     public void createNewUserWithExistingLoginName() {
         UserObject currentUser = baseUser;
         currentUser.setLogin("login");
@@ -210,7 +218,112 @@ public class testExecutor {
                 .fillEmailField(currentUser.getEmail())
                 .fillJabberField(currentUser.getJabber())
                 .clickOkButton()
-                .checkPopupError();
+                .checkPopupError(PopupTestData.notUniqValueError(currentUser.getLogin()));
+    }
+
+    @DataProvider(name = "invalidUserData")
+    public Object[][] negativeUserData() {
+        return new Object[][]{
+                new Object[]{new InvalidUserObject()
+                        .setExpectedError(PopupTestData.restrictedSpaceCharacterError)
+                        .setLogin("Vasiliy Testov") //let's try to create new user with " " in the middle of login
+                        .setPassword("PaSsWorD")
+                        .setPasswordConfirmation("PaSsWorD")
+                },
+                new Object[]{new InvalidUserObject()
+                        .setExpectedError(PopupTestData.restrictedSpaceCharacterError)
+                        .setLogin(" Vasiliy") //let's try to create new user with " " in the beginning of the login
+                        .setPassword("PaSsWorD")
+                        .setPasswordConfirmation("PaSsWorD")
+                },
+                new Object[]{new InvalidUserObject()
+                        .setExpectedError(PopupTestData.restrictedSpaceCharacterError)
+                        .setLogin("Vasiliy ") //let's try to create new user with " " in the end of the login
+                        .setPassword("PaSsWorD")
+                        .setPasswordConfirmation("PaSsWorD")
+                },
+                new Object[]{new InvalidUserObject()
+                        .setExpectedError(PopupTestData.loginShouldNotContain)
+                        .setLogin("<VasiliyTestov") //let's try to create new user with < in the login
+                        .setPassword("PaSsWorD")
+                        .setPasswordConfirmation("PaSsWorD")
+                },
+                new Object[]{new InvalidUserObject()
+                        .setExpectedError(PopupTestData.loginShouldNotContain)
+                        .setLogin("Vasiliy/Testov") //let's try to create new user with / in the login
+                        .setPassword("PaSsWorD")
+                        .setPasswordConfirmation("PaSsWorD")
+                },
+                new Object[]{new InvalidUserObject()
+                        .setExpectedError(PopupTestData.loginShouldNotContain)
+                        .setLogin("VasiliyTestov>") //let's try to create new user with / in the login
+                        .setPassword("PaSsWorD")
+                        .setPasswordConfirmation("PaSsWorD")
+                },
+                new Object[]{new InvalidUserObject() //let's try to create new user with empty login
+                        .setWithBulbError(true)
+                        .setFieldWithBulbError(CreateUserForm.login)
+                        .setExpectedError("Login is required!")
+                        .setPassword("PaSsWorD")
+                        .setPasswordConfirmation("PaSsWorD")
+                },
+                new Object[]{new InvalidUserObject() //let's try to create new user with all empty fields
+                        .setWithBulbError(true)
+                        .setFieldWithBulbError(CreateUserForm.login)
+                        .setExpectedError("Login is required!")
+                },
+                new Object[]{new InvalidUserObject() //let's try to create new user with empty empty password and password confirmation fields
+                        .setWithBulbError(true)
+                        .setFieldWithBulbError(CreateUserForm.password)
+                        .setExpectedError("Password is required!")
+                        .setLogin("1")
+                },
+                new Object[]{new InvalidUserObject() //let's try to create new user with empty password confirmation fields
+                        .setWithBulbError(true)
+                        .setFieldWithBulbError(CreateUserForm.confirmPassword)
+                        .setExpectedError("Password doesn't match!")
+                        .setLogin("1")
+                        .setPassword("1")
+                },
+                new Object[]{new InvalidUserObject() //let's try to create new user with empty password field
+                        .setWithBulbError(true)
+                        .setFieldWithBulbError(CreateUserForm.confirmPassword)
+                        .setExpectedError("Password doesn't match!")
+                        .setLogin("1")
+                        .setPasswordConfirmation("1")
+                },
+                new Object[]{new InvalidUserObject() //let's try to create new user with different password and confirmation password
+                        .setWithBulbError(true)
+                        .setFieldWithBulbError(CreateUserForm.confirmPassword)
+                        .setExpectedError("Password doesn't match!")
+                        .setLogin("1")
+                        .setPassword("0")
+                        .setPasswordConfirmation("1")
+                },
+        };
+    }
+
+    @Owner("Iaroslav Stepanov")
+    @Test(dataProvider = "invalidUserData")
+    @Description("Negative test cases")
+    public void tryToCreateUserWithInvalidTestData(InvalidUserObject currentUser) {
+
+        app.onUsersPage()
+                .isUsersPageLoaded()
+                .deleteUserWithExactlyTheSameLogin(currentUser.getLogin())
+                .deleteAllUsersIfUserLimitIsExceeded()
+                .openCreateNewUserDialog()
+                .fillCreateUserDialogFieldsAccordingToTestData(app, currentUser)
+                .clickOkButton();
+        if (currentUser.getWithBulbError() == null || !currentUser.getWithBulbError()) {
+            app.onUsersPage()
+                    .checkPopupError(currentUser.getExpectedError());
+        }
+        else {
+            app.onUsersPage()
+                    .checkBulbError(currentUser);
+
+        }
     }
 //                </> //negative. Not allowed for the login field
 

@@ -9,13 +9,11 @@ import io.qameta.atlas.webdriver.AtlasWebElement;
 import org.openqa.selenium.NoSuchElementException;
 import org.testng.Assert;
 import org.testng.asserts.SoftAssert;
-import testData.CommonTestData;
-import testData.LoginTestData;
-import testData.UserObject;
-import testData.UsersAdministrationTestData;
+import testData.*;
 import utils.ApplicationManager;
 import utils.Utils;
 
+import java.util.List;
 import java.util.Optional;
 
 public class UsersPageHelper extends DriverBasedHelper {
@@ -144,11 +142,32 @@ public class UsersPageHelper extends DriverBasedHelper {
     }
     //^^^Fill the XXX field in the Administration -> Users -> Create new user dialog"^^^
 
-    @Step("Check \"Value should be unique\' popup")
-    public void checkPopupError() {
-        System.out.println(
-                pages.administrationPage().getPopupContainer().getFirstPopup().getErrorDescriptionField().getText()
-        );
+    @Step("Check error popup")
+    public void checkPopupError(String expectedErrorText) {
+        try {
+            Assert.assertEquals(pages.administrationPage()
+                    .getPopupContainer().getFirstPopup().getErrorDescriptionField().getText().trim(), expectedErrorText, "Text in error pop up did not patch");
+        }
+        catch (NoSuchElementException ex) {
+            Assert.fail("Expected error popup was not showed");
+        }
+    }
+
+    @Step("Check bulb error")
+    public void checkBulbError(InvalidUserObject fieldAndError) {
+//        try {
+            pages.administrationPage().getUserPanelContainer().getCreateNewUserDialog(CommonTestData.dialogIsShown)
+                    .getFieldWithBulbError(fieldAndError.getFieldWithBulbError()).isDisplayed();
+            List<AtlasWebElement> listOfBulbErrors = pages.administrationPage().getUserPanelContainer().getCreateNewUserDialog(CommonTestData.dialogIsShown)
+                    .getAllBulbErrors();
+            Assert.assertEquals(listOfBulbErrors.size(), 1, "More than one error is shown");
+            listOfBulbErrors.get(0).click();
+            Assert.assertEquals(pages.administrationPage().getUserPanelContainer().getCreateNewUserDialog(CommonTestData.dialogIsShown)
+                    .getBulbErrorTooltip().getText().trim(), fieldAndError.getExpectedError(), "Invalid bulb error tooltip is shown!");
+//        }
+//        catch (NoSuchElementException ex) {
+//            Assert.fail("NoSuchElementException occurs. Seems to be that expected bulb error \"" + fieldAndError.getExpectedError() + "\" was not showed");
+//        }
     }
 
     @Step("Check that message popup appears")
@@ -190,6 +209,10 @@ public class UsersPageHelper extends DriverBasedHelper {
     ///////////////////////////////////////Users list///////////////////////////////////////
     @Step("Get users list in the Administration -> Users")
     public UsersPageHelper deleteUserWithExactlyTheSameLogin(String fullMatch) {
+        if (fullMatch == null)
+        {
+            return this;
+        }
         isUsersListTableEmpty();
         Optional<UsersListRow> usersListRow = getRowByExactlyTheSameLogin(fullMatch);
         if (usersListRow.isPresent()) {
