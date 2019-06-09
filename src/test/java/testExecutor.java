@@ -40,44 +40,6 @@ public class testExecutor {
     }
 
     ///////////////////////////////Test cases///////////////////////////////
-
-    @Owner("Iaroslav Stepanov")
-    @Test
-    @Description("Debug method to search for the existing user and delete it if required")
-    public void deleteUserWithTheSameName() {
-        UserObject currentUser = baseUser;
-
-        app.onUsersPage()
-                .isUsersPageLoaded()
-                .fillFindField(currentUser.getLogin())
-                .startSearch()
-                .deleteUserWithExactlyTheSameLogin(currentUser.getLogin())
-        ;
-    }
-
-    @Owner("Iaroslav Stepanov")
-    @Test
-    @Description("Check that we are not able to create new user with existing login name")
-    public void createNewUserWithExistingLoginName() {
-        UserObject currentUser = baseUser;
-        currentUser.setLogin("login22");
-
-        app.onUsersPage()
-                .isUsersPageLoaded()
-                .deleteAllUsersIfUserLimitIsExceeded()
-                .createUserIfItDoesNotExists(app, currentUser)
-                .openCreateNewUserDialog()
-                .fillLoginField(currentUser.getLogin())
-                .fillPasswordField(currentUser.getPassword())
-                .fillConfirmPasswordField(currentUser.getPasswordConfirmation())
-                .clickOnTheForcePasswordChangeCheckbox()
-                .fillFullNameField(currentUser.getFullName())
-                .fillEmailField(currentUser.getEmail())
-                .fillJabberField(currentUser.getJabber())
-                .clickOkButton()
-                .checkPopupError();
-    }
-
     @DataProvider(name = "validUsers")
     public Object[][] createUserTestData() {
         return new Object[][]{
@@ -132,13 +94,14 @@ public class testExecutor {
                         .setEmail("e m a i l")
                         .setJabber("j a b b e r")},
 //                Comments:
-//                </> //negative. Not allowed for the login field
 //                '" could not be checked for the full name, jabber and email fields because it could not be used in xpath and I am not able to get this fields in other way
+                //input more than field allows
+                //copy paste in fields
         };
     }
 
     @Owner("Iaroslav Stepanov")
-    @Test(dataProvider = "createUserTestData")
+    @Test(dataProvider = "validUsers")
     @Description("Positive test: Create users with all fields combinations")
     public void createNewUserPositive(UserObject currentUser) {
         app.onUsersPage()
@@ -226,9 +189,32 @@ public class testExecutor {
                     .checkUserName(currentUser);
         }
     }
-    //
-    //input more than field allows
-    //copy paste in fields
+
+    @Owner("Iaroslav Stepanov")
+    @Test
+    @Description("Negative test cases which invokes popups")
+    public void createNewUserWithExistingLoginName() {
+        UserObject currentUser = baseUser;
+        currentUser.setLogin("login");
+
+        app.onUsersPage()
+                .isUsersPageLoaded()
+                .deleteAllUsersIfUserLimitIsExceeded()
+                .createUserIfItDoesNotExists(app, currentUser)
+                .openCreateNewUserDialog()
+                .fillLoginField(currentUser.getLogin())
+                .fillPasswordField(currentUser.getPassword())
+                .fillConfirmPasswordField(currentUser.getPasswordConfirmation())
+                .clickOnTheForcePasswordChangeCheckbox()
+                .fillFullNameField(currentUser.getFullName())
+                .fillEmailField(currentUser.getEmail())
+                .fillJabberField(currentUser.getJabber())
+                .clickOkButton()
+                .checkPopupError();
+    }
+//                </> //negative. Not allowed for the login field
+
     //create new user button disappears if user limit is exceeded
     //check password and confirm password fields type to be sure that user will see * instead of his password (security check)
+    //amount of users counter is not decreased after the user was deleted
 }
