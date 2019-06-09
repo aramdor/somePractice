@@ -34,7 +34,7 @@ public class testExecutor {
                 .clickOnFieldInDropdown(DropDown.administrationUsers);
     }
 
-    @AfterMethod
+    @AfterMethod(alwaysRun = true)
     public void driverStop(ITestContext context) {
         app.stop();
     }
