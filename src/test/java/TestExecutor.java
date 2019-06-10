@@ -10,7 +10,7 @@ import org.testng.annotations.Test;
 import testData.*;
 import utils.ApplicationManager;
 
-public class testExecutor {
+public class TestExecutor {
     private ApplicationManager app;
     private UserObject baseUser = new UserObject("login", "password", "password", true, "Vasiliy Testov", "iaroslav.stepanov@t-systems.com", "123", "—");
 
