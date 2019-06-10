@@ -98,8 +98,6 @@ public class TestExecutor {
                         },
 //                Comments:
 //                '" could not be checked for the full name, jabber and email fields because it could not be used in xpath and I am not able to get this fields in other way
-                //input more than field allows
-                //copy paste in fields
         };
     }
 
@@ -325,9 +323,13 @@ public class TestExecutor {
 
         }
     }
-//                </> //negative. Not allowed for the login field
 
-    //create new user button disappears if user limit is exceeded
-    //check password and confirm password fields type to be sure that user will see * instead of his password (security check)
-    //amount of users counter is not decreased after the user was deleted
+    //TODO create new user button disappears if user limit is exceeded
+    //TODO check password and confirm password fields type to be sure that user will see * instead of his password (security check)
+    //TODO amount of users counter is not decreased after the user was deleted
+    //TODO check fields descriptions
+    //TODO check dialog blocks titles
+    //TODO check dialog position and styles
+    //TODO input more than field allows
+    //TODO copy paste in fields
 }
