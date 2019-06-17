@@ -259,7 +259,7 @@ public class UsersPageHelper extends DriverBasedHelper {
     @Step("Find user with exactly the same login, name or email")
     private Optional<UsersListRow> getRowByExactlyTheSameLogin(String fullMatch) {
         return pages.administrationPage().getUserPanelContainer().getUsersListTable()
-                .getTableRows().stream().filter(row -> row.getColumnFromTheRow(UsersListRow.login).getText().contentEquals(fullMatch)).findFirst();
+                .getTableRows().stream().filter(row -> row.getColumnFromTheRow(UsersListRow.login).getText().toLowerCase().contentEquals(fullMatch.toLowerCase())).findFirst();
     }
 
     @Step("Check that values in the Users table contains same values which were used at the user creation")
