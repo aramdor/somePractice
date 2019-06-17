@@ -146,7 +146,7 @@ public class UsersPageHelper extends DriverBasedHelper {
     public void checkPopupError(String expectedErrorText) {
         try {
             Assert.assertEquals(pages.administrationPage()
-                    .getPopupContainer().getFirstPopup().getErrorDescriptionField().getText().trim(), expectedErrorText, "Text in error pop up did not patch");
+                    .getPopupContainer().getFirstPopup().getErrorDescriptionField().getText().trim(), expectedErrorText, "Text in error pop up did not match");
         }
         catch (NoSuchElementException ex) {
             Assert.fail("Expected error popup was not showed");

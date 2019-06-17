@@ -1,4 +1,5 @@
 import atlasInstances.elements.DropDown;
+import atlasInstances.elements.Popup;
 import atlasInstances.pages.administration.CreateUserForm;
 import io.qameta.allure.Description;
 import io.qameta.allure.Owner;
@@ -196,27 +197,32 @@ public class TestExecutor {
         }
     }
 
-    @Owner("Iaroslav Stepanov")
-    @Test
-    @Description("Try to create user with the same login name")
-    public void createNewUserWithExistingLoginName() {
-        UserObject currentUser = baseUser;
-        currentUser.setLogin("login");
+    @DataProvider(name = "existingUser")
+    public Object[][] userWithSameName() {
+        return new Object[][]{
+                new Object[]{new UserObject()
+                        .setLogin("Vasiliy")
+                        .setPassword("PaSsWorD")
+                        .setPasswordConfirmation("PaSsWorD")},
+                new Object[]{new UserObject()
+                        .setLogin("VASILIY")
+                        .setPassword("PaSsWorD")
+                        .setPasswordConfirmation("PaSsWorD")}, //same name but in upper case
+        };
+    }
 
+    @Owner("Iaroslav Stepanov")
+    @Test(dataProvider = "existingUser")
+    @Description("Try to create user with the same login name")
+    public void createNewUserWithExistingLoginName(UserObject currentUser) {
         app.onUsersPage()
                 .isUsersPageLoaded()
                 .deleteAllUsersIfUserLimitIsExceeded()
                 .createUserIfItDoesNotExists(app, currentUser)
                 .openCreateNewUserDialog()
-                .fillLoginField(currentUser.getLogin())
-                .fillPasswordField(currentUser.getPassword())
-                .fillConfirmPasswordField(currentUser.getPasswordConfirmation())
-                .clickOnTheForcePasswordChangeCheckbox()
-                .fillFullNameField(currentUser.getFullName())
-                .fillEmailField(currentUser.getEmail())
-                .fillJabberField(currentUser.getJabber())
+                .fillCreateUserDialogFieldsAccordingToTestData(app, currentUser)
                 .clickOkButton()
-                .checkPopupError(PopupTestData.notUniqValueError(currentUser.getLogin()));
+                .checkPopupError(PopupTestData.notUniqValueError(PopupTestData.login));
     }
 
     @DataProvider(name = "invalidUserData")
@@ -305,7 +311,6 @@ public class TestExecutor {
     @Test(dataProvider = "invalidUserData")
     @Description("Negative test cases")
     public void tryToCreateUserWithInvalidTestData(InvalidUserObject currentUser) {
-
         app.onUsersPage()
                 .isUsersPageLoaded()
                 .deleteUserWithExactlyTheSameLogin(currentUser.getLogin())
@@ -324,6 +329,17 @@ public class TestExecutor {
         }
     }
 
+    @Owner("Iaroslav Stepanov")
+    @Test()
+    @Description("Kotlin data class debuger")
+    public void dataClassFromKotlin() {
+        UserObjectKT testUser = new UserObjectKT("");
+        System.out.println("Output: " + testUser.getLastAccess());
+        System.out.println("Output:" + testUser.getLogin());
+    }
+
+
+
     //TODO create new user button disappears if user limit is exceeded
     //TODO check password and confirm password fields type to be sure that user will see * instead of his password (security check)
     //TODO amount of users counter is not decreased after the user was deleted
@@ -332,4 +348,5 @@ public class TestExecutor {
     //TODO check dialog position and styles
     //TODO input more than field allows
     //TODO copy paste in fields
+    //TODO add check that only 2 default groups are added to the new user
 }
