@@ -1,4 +1,5 @@
 # Required software setup:
+ * YouTrack trial version is installed and launched on your PC
  * Java 1.8 (jdk1.8.0_172 was used for the development)
  * Maven (installed and added to the classpath)
  * Git
